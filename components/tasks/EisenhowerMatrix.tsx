@@ -3,49 +3,27 @@
 import { useMemo } from "react";
 import { cn } from "@/lib/utils/cn";
 import { useTasks } from "@/hooks/useTasks";
+import { useLocale } from "@/contexts/locale-context";
 import { getQuadrant, type EisenhowerQuadrant, type Task } from "@/types/tasks";
 import { TaskCard } from "./TaskCard";
 
-const QUADRANTS: {
-  id: EisenhowerQuadrant;
-  title: string;
-  subtitle: string;
-  headerClass: string;
-}[] = [
-  {
-    id: "do_first",
-    title: "Hacer primero",
-    subtitle: "Urgente e Importante",
-    headerClass: "bg-destructive/15 text-destructive border-b border-destructive/25",
-  },
-  {
-    id: "schedule",
-    title: "Programar",
-    subtitle: "Importante, No Urgente",
-    headerClass: "bg-info/15 text-info border-b border-info/25",
-  },
-  {
-    id: "delegate",
-    title: "Delegar",
-    subtitle: "Urgente, No Importante",
-    headerClass: "bg-warning/15 text-warning border-b border-warning/25",
-  },
-  {
-    id: "eliminate",
-    title: "Eliminar",
-    subtitle: "Ni Urgente Ni Importante",
-    headerClass: "bg-muted/30 text-muted border-b border-border",
-  },
-];
+const QUADRANT_HEADER_CLASSES: Record<EisenhowerQuadrant, string> = {
+  do_first: "bg-destructive/15 text-destructive border-b border-destructive/25",
+  schedule: "bg-info/15 text-info border-b border-info/25",
+  delegate: "bg-warning/15 text-warning border-b border-warning/25",
+  eliminate: "bg-muted/30 text-muted border-b border-border",
+};
+
+const QUADRANT_ORDER: EisenhowerQuadrant[] = ["do_first", "schedule", "delegate", "eliminate"];
 
 function groupByQuadrant(tasks: Task[]) {
   const map = new Map<EisenhowerQuadrant, Task[]>();
-  for (const q of QUADRANTS) {
-    map.set(q.id, []);
+  for (const q of QUADRANT_ORDER) {
+    map.set(q, []);
   }
-  for (const t of tasks) {
-    const q = getQuadrant(t);
-    map.get(q)?.push(t);
+  for (const task of tasks) {
+    const q = getQuadrant(task);
+    map.get(q)?.push(task);
   }
   return map;
 }
@@ -62,8 +40,41 @@ function MatrixSkeleton() {
 
 export function EisenhowerMatrix() {
   const { tasks, isLoading } = useTasks();
+  const { t } = useLocale();
 
   const byQuadrant = useMemo(() => groupByQuadrant(tasks), [tasks]);
+
+  const QUADRANTS: {
+    id: EisenhowerQuadrant;
+    title: string;
+    subtitle: string;
+    headerClass: string;
+  }[] = [
+    {
+      id: "do_first",
+      title: t.tasks.doFirst,
+      subtitle: t.tasks.urgentImportant,
+      headerClass: QUADRANT_HEADER_CLASSES.do_first,
+    },
+    {
+      id: "schedule",
+      title: t.tasks.schedule,
+      subtitle: t.tasks.importantNotUrgent,
+      headerClass: QUADRANT_HEADER_CLASSES.schedule,
+    },
+    {
+      id: "delegate",
+      title: t.tasks.delegate,
+      subtitle: t.tasks.urgentNotImportant,
+      headerClass: QUADRANT_HEADER_CLASSES.delegate,
+    },
+    {
+      id: "eliminate",
+      title: t.tasks.eliminate,
+      subtitle: t.tasks.notUrgentNotImportant,
+      headerClass: QUADRANT_HEADER_CLASSES.eliminate,
+    },
+  ];
 
   if (isLoading) {
     return <MatrixSkeleton />;
@@ -86,7 +97,7 @@ export function EisenhowerMatrix() {
             </div>
             <div className="flex flex-1 flex-col gap-2 overflow-y-auto p-3">
               {list.length === 0 ? (
-                <p className="py-6 text-center text-xs text-muted">Sin tareas aún</p>
+                <p className="py-6 text-center text-xs text-muted">{t.tasks.noTasksQuadrant}</p>
               ) : (
                 <ul className="space-y-2">
                   {list.map((task) => (

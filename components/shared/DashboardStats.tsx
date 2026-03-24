@@ -2,6 +2,7 @@
 
 import { CheckSquare, Flame, Repeat, Timer } from "lucide-react";
 import { cn } from "@/lib/utils/cn";
+import { useLocale } from "@/contexts/locale-context";
 
 export interface DashboardStatsProps {
   streak: number;
@@ -18,12 +19,13 @@ export function DashboardStats({
   focusMinToday,
   className,
 }: DashboardStatsProps) {
+  const { t } = useLocale();
   const items = [
-    { label: "Racha", value: streak, icon: Flame },
-    { label: "Hábitos hoy", value: habitsToday, icon: Repeat },
-    { label: "Tareas hoy", value: tasksToday, icon: CheckSquare },
-    { label: "Enfoque (min)", value: focusMinToday, icon: Timer },
-  ] as const;
+    { label: t.stats.streak, value: streak, icon: Flame },
+    { label: t.stats.habitsToday, value: habitsToday, icon: Repeat },
+    { label: t.stats.tasksToday, value: tasksToday, icon: CheckSquare },
+    { label: t.stats.focusMin, value: focusMinToday, icon: Timer },
+  ];
 
   return (
     <div

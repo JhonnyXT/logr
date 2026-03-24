@@ -15,6 +15,7 @@ import {
   MORNING_PROMPTS,
   type JournalEntryType,
 } from "@/types/journal";
+import { useLocale } from "@/contexts/locale-context";
 
 interface JournalEntryProps {
   entryType: JournalEntryType;
@@ -54,6 +55,7 @@ function getPromptUsed(entry: Record<string, unknown> | undefined): string | und
 }
 
 export function JournalEntry({ entryType, className }: JournalEntryProps) {
+  const { t } = useLocale();
   const prompts = entryType === "morning" ? MORNING_PROMPTS : EVENING_PROMPTS;
   const { entries, isLoading, saveEntry } = useJournal();
   const { awardXp } = useXp();
@@ -89,7 +91,7 @@ export function JournalEntry({ entryType, className }: JournalEntryProps) {
 
   const Icon = entryType === "morning" ? Sun : Moon;
   const label =
-    entryType === "morning" ? "Reflexión matutina" : "Reflexión nocturna";
+    entryType === "morning" ? t.journal.morningReflection : t.journal.eveningReflection;
 
   return (
     <Card
@@ -129,7 +131,7 @@ export function JournalEntry({ entryType, className }: JournalEntryProps) {
             htmlFor={`journal-${entryType}`}
             className="text-xs font-medium uppercase tracking-wider text-muted"
           >
-            Tu reflexión
+            {t.journal.yourReflection}
           </label>
           <textarea
             id={`journal-${entryType}`}
@@ -137,7 +139,7 @@ export function JournalEntry({ entryType, className }: JournalEntryProps) {
             onChange={(e) => setContent(e.target.value)}
             disabled={isLoading}
             rows={6}
-            placeholder="Escribe tu reflexión..."
+            placeholder={t.journal.placeholder}
             className={cn(
               "w-full resize-y rounded-xl border border-border bg-background/60 px-4 py-3",
               "text-[15px] leading-relaxed text-foreground placeholder:text-muted",
@@ -155,7 +157,7 @@ export function JournalEntry({ entryType, className }: JournalEntryProps) {
             disabled={isLoading || saveEntry.isPending}
             onClick={() => void handleSave()}
           >
-            {saveEntry.isPending ? "Guardando…" : "Guardar entrada"}
+            {saveEntry.isPending ? t.journal.savingEntry : t.journal.saveEntry}
           </Button>
         </div>
       </CardContent>

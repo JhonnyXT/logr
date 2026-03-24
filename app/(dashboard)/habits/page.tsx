@@ -7,19 +7,21 @@ import { Button } from "@/components/ui/button";
 import { Dialog } from "@/components/ui/dialog";
 import { HabitList } from "@/components/habits/HabitList";
 import { HabitForm } from "@/components/habits/HabitForm";
+import { useLocale } from "@/contexts/locale-context";
 
 export default function HabitsPage() {
   const [open, setOpen] = useState(false);
+  const { t } = useLocale();
 
   return (
     <div className="mx-auto max-w-3xl space-y-8">
       <PageHeader
-        title="Hábitos"
-        description="Genera constancia con registros diarios y rachas."
+        title={t.habits.pageTitle}
+        description={t.habits.pageDesc}
         action={
           <Button type="button" variant="accent" size="md" onClick={() => setOpen(true)}>
             <Plus className="h-4 w-4" />
-            Nuevo hábito
+            {t.habits.newHabit}
           </Button>
         }
       />

@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { createClient } from "@/lib/supabase/client";
 import { cn } from "@/lib/utils/cn";
+import { useLocale } from "@/contexts/locale-context";
 
 const inputClassName = cn(
   "w-full rounded-lg border border-border bg-background px-3 py-2.5 text-sm text-foreground shadow-sm",
@@ -17,6 +18,7 @@ const inputClassName = cn(
 );
 
 export default function LoginPage() {
+  const { t } = useLocale();
   const router = useRouter();
   const formId = useId();
   const emailId = `${formId}-email`;
@@ -36,7 +38,7 @@ export default function LoginPage() {
       .value;
 
     if (!email || !password) {
-      setError("Por favor ingresa tu correo y contraseña.");
+      setError(t.auth.enterCredentials);
       return;
     }
 
@@ -60,9 +62,9 @@ export default function LoginPage() {
   return (
     <Card className="border-border/80 shadow-lg shadow-black/20">
       <CardHeader className="pb-2">
-        <CardTitle className="text-xl">Iniciar sesión</CardTitle>
+        <CardTitle className="text-xl">{t.auth.signIn}</CardTitle>
         <p className="text-sm text-muted">
-          Bienvenido de nuevo. Ingresa tus credenciales para acceder.
+          {t.auth.welcomeBack} {t.auth.welcomeBackDesc}
         </p>
       </CardHeader>
       <CardContent>
@@ -77,7 +79,7 @@ export default function LoginPage() {
               htmlFor={emailId}
               className="block text-sm font-medium text-foreground"
             >
-              Correo electrónico
+              {t.auth.email}
             </label>
             <input
               id={emailId}
@@ -96,7 +98,7 @@ export default function LoginPage() {
               htmlFor={passwordId}
               className="block text-sm font-medium text-foreground"
             >
-              Contraseña
+              {t.auth.password}
             </label>
             <div className="relative">
               <input
@@ -113,7 +115,7 @@ export default function LoginPage() {
                 type="button"
                 onClick={() => setShowPassword((v) => !v)}
                 className="absolute right-3 top-1/2 -translate-y-1/2 text-muted hover:text-foreground transition-colors"
-                aria-label={showPassword ? "Ocultar contraseña" : "Mostrar contraseña"}
+                aria-label={showPassword ? t.auth.hidePassword : t.auth.showPassword}
               >
                 {showPassword ? (
                   <EyeOff className="h-4 w-4" />
@@ -143,16 +145,16 @@ export default function LoginPage() {
             disabled={pending}
             aria-busy={pending}
           >
-            {pending ? "Iniciando sesión…" : "Iniciar sesión"}
+            {pending ? t.auth.signingIn : t.auth.signIn}
           </Button>
 
           <p className="text-center text-sm text-muted">
-            ¿No tienes cuenta?{" "}
+            {t.auth.noAccount}{" "}
             <Link
               href="/register"
               className="font-medium text-accent underline-offset-4 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/50 rounded-sm"
             >
-              Créala aquí
+              {t.auth.createOne}
             </Link>
           </p>
         </form>

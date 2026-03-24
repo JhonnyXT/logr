@@ -7,16 +7,19 @@ import { cn } from "@/lib/utils/cn";
 
 export type VisionSaveStatus = "idle" | "saving" | "saved" | "error";
 
-export function visionSaveLabel(status: VisionSaveStatus): string {
+export function visionSaveLabel(
+  status: VisionSaveStatus,
+  t: { saving: string; saved: string }
+): string {
   switch (status) {
     case "saving":
-      return "Guardando…";
+      return t.saving;
     case "saved":
-      return "Guardado";
+      return t.saved;
     case "error":
       return "No se pudo guardar";
     default:
-      return "Guardado automático activo";
+      return t.saved;
   }
 }
 

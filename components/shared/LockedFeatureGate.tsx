@@ -5,6 +5,7 @@ import { Lock } from "lucide-react";
 import { cn } from "@/lib/utils/cn";
 import type { FeatureKey } from "@/types/gamification";
 import { FEATURE_GATES } from "@/lib/gamification/level-gates";
+import { useLocale } from "@/contexts/locale-context";
 
 interface LockedFeatureGateProps {
   featureKey: FeatureKey;
@@ -19,6 +20,7 @@ export function LockedFeatureGate({
   children,
   className,
 }: LockedFeatureGateProps) {
+  const { t } = useLocale();
   const requiredLevel = FEATURE_GATES[featureKey];
   const isUnlocked = userLevel >= requiredLevel;
 
@@ -35,14 +37,13 @@ export function LockedFeatureGate({
         </div>
         <div className="text-center">
           <p className="text-lg font-semibold text-foreground">
-            Función bloqueada
+            {t.xp.lockedTitle}
           </p>
           <p className="mt-1 text-sm text-muted">
-            Llega al <span className="font-semibold text-accent">Nivel {requiredLevel}</span> para
-            desbloquear esta función
+            {t.xp.lockedDescPre} <span className="font-semibold text-accent">Nivel {requiredLevel}</span> {t.xp.lockedDescPost}
           </p>
           <p className="mt-0.5 text-xs text-muted">
-            Actualmente estás en el Nivel {userLevel}
+            {t.xp.currentLevelPre} {userLevel}
           </p>
         </div>
       </div>

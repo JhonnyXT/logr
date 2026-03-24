@@ -2,6 +2,7 @@
 
 import { Repeat } from "lucide-react";
 import { useHabits } from "@/hooks/useHabits";
+import { useLocale } from "@/contexts/locale-context";
 import { HabitCard } from "./HabitCard";
 
 function HabitListSkeleton() {
@@ -19,6 +20,7 @@ function HabitListSkeleton() {
 
 export function HabitList() {
   const { habits, isLoading } = useHabits();
+  const { t } = useLocale();
 
   if (isLoading) {
     return <HabitListSkeleton />;
@@ -30,9 +32,9 @@ export function HabitList() {
         <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-accent/10 text-accent">
           <Repeat className="h-7 w-7" aria-hidden />
         </div>
-        <h2 className="text-lg font-semibold text-foreground">Sin hábitos aún</h2>
+        <h2 className="text-lg font-semibold text-foreground">{t.habits.noHabits}</h2>
         <p className="mt-2 max-w-sm text-sm text-muted">
-          Agrega tu primer hábito con el botón de arriba. Los pequeños logros diarios se acumulan en cambios duraderos.
+          {t.habits.addFirst}
         </p>
       </div>
     );

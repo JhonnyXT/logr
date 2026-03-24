@@ -7,9 +7,11 @@ import { PageHeader } from "@/components/shared/PageHeader";
 import { NoteEditor } from "@/components/notes/NoteEditor";
 import { NotesSidebar } from "@/components/notes/NotesSidebar";
 import { rowToNote, type NotesRow } from "@/lib/notes/map-from-row";
+import { useLocale } from "@/contexts/locale-context";
 import type { Note } from "@/types/notes";
 
 export default function NotesPage() {
+  const { t } = useLocale();
   const [userLevel, setUserLevel] = useState(1);
   const [notes, setNotes] = useState<Note[]>([]);
   const [selectedNoteId, setSelectedNoteId] = useState<string | null>(null);
@@ -77,8 +79,8 @@ export default function NotesPage() {
   return (
     <div className="mx-auto flex max-w-6xl flex-col gap-6">
       <PageHeader
-        title="Notas"
-        description="Captura ideas en un espacio sencillo — se desbloquea en el nivel 7."
+        title={t.notes.pageTitle}
+        description={t.notes.pageDesc}
       />
 
       <LockedFeatureGate featureKey="notes" userLevel={userLevel}>

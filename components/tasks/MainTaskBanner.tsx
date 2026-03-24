@@ -5,10 +5,12 @@ import { Star } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { cn } from "@/lib/utils/cn";
 import { useTasks } from "@/hooks/useTasks";
+import { useLocale } from "@/contexts/locale-context";
 
 export function MainTaskBanner() {
   const { tasks } = useTasks();
-  const mainTask = tasks.find((t) => t.isMainTask) ?? null;
+  const { t } = useLocale();
+  const mainTask = tasks.find((task) => task.isMainTask) ?? null;
   if (!mainTask) {
     return (
       <div className="rounded-xl border border-border bg-surface/80 p-4 pl-5 shadow-sm">
@@ -19,13 +21,10 @@ export function MainTaskBanner() {
             </div>
             <div className="min-w-0 flex-1 space-y-1">
               <p className="text-sm font-semibold uppercase tracking-wide text-accent">
-                Enfoque principal
+                {t.tasks.mainFocusTitle}
               </p>
               <p className="text-base text-foreground">
-                Establece tu enfoque principal de hoy — elige una tarea y márcala con la estrella en tu lista.
-              </p>
-              <p className="text-sm text-muted">
-                Tu tarea principal otorga XP extra al completarla.
+                {t.tasks.mainFocusEmpty}
               </p>
             </div>
           </div>
@@ -43,7 +42,7 @@ export function MainTaskBanner() {
           </div>
           <div className="min-w-0 space-y-1">
             <p className="text-xs font-semibold uppercase tracking-wider text-accent">
-              Tarea principal de hoy
+              {t.tasks.mainFocusTitle}
             </p>
             <p className="text-lg font-semibold leading-snug text-foreground">
               {mainTask.title}
@@ -59,7 +58,7 @@ export function MainTaskBanner() {
             "inline-flex h-8 shrink-0 items-center justify-center self-start rounded-md px-3 text-sm font-medium text-muted transition-colors hover:bg-foreground/5 hover:text-foreground"
           )}
         >
-          Matriz
+          {t.tasks.eisenhower}
         </Link>
       </div>
     </Card>

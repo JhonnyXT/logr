@@ -3,8 +3,10 @@
 import { useXpNotificationStore } from "@/stores/xp-notification-store";
 import { cn } from "@/lib/utils/cn";
 import { Sparkles, TrendingUp } from "lucide-react";
+import { useLocale } from "@/contexts/locale-context";
 
 export function XpToastContainer() {
+  const { t } = useLocale();
   const notifications = useXpNotificationStore((s) => s.notifications);
   const removeNotification = useXpNotificationStore((s) => s.removeNotification);
 
@@ -36,14 +38,14 @@ export function XpToastContainer() {
             <p className="truncate text-xs text-muted">{notif.message}</p>
             {notif.levelUp && (
               <p className="text-xs font-medium text-foreground">
-                ¡Subiste de nivel! Llegaste al nivel {notif.levelUp}
+                {t.xp.levelUp} {t.xp.reachedLevel} {notif.levelUp}
               </p>
             )}
           </div>
           <button
             onClick={() => removeNotification(notif.id)}
             className="ml-2 text-muted hover:text-foreground"
-            aria-label="Cerrar"
+            aria-label={t.xp.dismiss}
           >
             &times;
           </button>

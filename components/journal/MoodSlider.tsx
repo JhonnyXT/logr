@@ -2,6 +2,7 @@
 
 import { MOOD_EMOJIS } from "@/types/journal";
 import { cn } from "@/lib/utils/cn";
+import { useLocale } from "@/contexts/locale-context";
 
 interface MoodSliderProps {
   value: number;
@@ -16,13 +17,14 @@ export function MoodSlider({
   disabled,
   className,
 }: MoodSliderProps) {
+  const { t } = useLocale();
   const emoji = MOOD_EMOJIS[value] ?? MOOD_EMOJIS[5];
 
   return (
     <div className={cn("space-y-4", className)}>
       <div className="flex flex-col items-center gap-2 sm:flex-row sm:justify-between sm:gap-6">
         <span className="text-xs font-medium uppercase tracking-wider text-muted">
-          Estado de ánimo
+          {t.journal.mood}
         </span>
         <div className="flex items-center gap-4">
           <span
@@ -36,7 +38,7 @@ export function MoodSlider({
               {value}
               <span className="text-lg font-medium text-muted">/10</span>
             </p>
-            <p className="text-xs text-muted">¿Cómo te sientes?</p>
+            <p className="text-xs text-muted">{t.journal.howFeeling}</p>
           </div>
         </div>
       </div>

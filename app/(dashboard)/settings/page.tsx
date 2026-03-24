@@ -4,6 +4,7 @@ import { useCallback, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { LogOut } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
+import { useLocale } from "@/contexts/locale-context";
 import { PageHeader } from "@/components/shared/PageHeader";
 import { WeeklyResetWizard } from "@/components/weekly-reset/WeeklyResetWizard";
 import { Button } from "@/components/ui/button";
@@ -11,6 +12,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { cn } from "@/lib/utils/cn";
 
 export default function SettingsPage() {
+  const { locale, setLocale, t } = useLocale();
   const router = useRouter();
   const [username, setUsername] = useState("");
   const [fullName, setFullName] = useState("");
@@ -73,7 +75,7 @@ export default function SettingsPage() {
       .eq("id", user.id);
 
     if (error) setMessage(error.message);
-    else setMessage("¡Guardado!");
+    else setMessage(t.settings.savedMsg);
     setSaving(false);
     router.refresh();
   }
@@ -88,26 +90,26 @@ export default function SettingsPage() {
   if (loading) {
     return (
       <div className="mx-auto max-w-2xl">
-        <PageHeader title="Ajustes" description="Gestiona tu perfil y tu ritmo semanal." />
-        <p className="text-sm text-muted">Cargando…</p>
+        <PageHeader title={t.settings.pageTitle} description={t.settings.pageDesc} />
+        <p className="text-sm text-muted">{t.settings.loading}</p>
       </div>
     );
   }
 
   return (
     <div className="mx-auto flex max-w-2xl flex-col gap-10">
-      <PageHeader title="Ajustes" description="Gestiona tu perfil y tu ritmo semanal." />
+      <PageHeader title={t.settings.pageTitle} description={t.settings.pageDesc} />
 
       <form onSubmit={handleSaveProfile} className="space-y-6">
         <Card>
           <CardHeader>
-            <CardTitle className="text-lg">Perfil</CardTitle>
-            <p className="text-sm text-muted">Esta información se guarda en tu cuenta.</p>
+            <CardTitle className="text-lg">{t.settings.profileSection}</CardTitle>
+            <p className="text-sm text-muted">{t.settings.profileDesc}</p>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="space-y-1.5">
               <label htmlFor="username" className="text-sm font-medium text-foreground">
-                Nombre de usuario
+                {t.settings.usernameLabel}
               </label>
               <input
                 id="username"
@@ -122,7 +124,7 @@ export default function SettingsPage() {
             </div>
             <div className="space-y-1.5">
               <label htmlFor="fullName" className="text-sm font-medium text-foreground">
-                Nombre completo
+                {t.settings.fullNameLabel}
               </label>
               <input
                 id="fullName"
@@ -136,7 +138,7 @@ export default function SettingsPage() {
             </div>
             <div className="space-y-1.5">
               <label htmlFor="bio" className="text-sm font-medium text-foreground">
-                Biografía
+                {t.settings.bioLabel}
               </label>
               <textarea
                 id="bio"
@@ -157,26 +159,53 @@ export default function SettingsPage() {
                 onChange={(e) => setIsPublic(e.target.checked)}
               />
               <div>
-                <p className="text-sm font-medium text-foreground">Perfil público</p>
-                <p className="text-xs text-muted">Haz tu perfil visible para otros</p>
+                <p className="text-sm font-medium text-foreground">{t.settings.publicProfile}</p>
+                <p className="text-xs text-muted">{t.settings.publicProfileDesc}</p>
               </div>
             </label>
             {message ? (
               <p
                 className={cn(
                   "text-sm",
-                  message.includes("Guardado") ? "text-accent" : "text-destructive"
+                  message === t.settings.savedMsg ? "text-accent" : "text-destructive"
                 )}
               >
                 {message}
               </p>
             ) : null}
             <Button type="submit" variant="accent" disabled={saving}>
-              {saving ? "Guardando…" : "Guardar cambios"}
+              {saving ? t.settings.saving : t.settings.saveChanges}
             </Button>
           </CardContent>
         </Card>
       </form>
+
+      <Card>
+        <CardHeader>
+          <CardTitle className="text-lg">{t.settings.languageSection}</CardTitle>
+          <p className="text-sm text-muted">{t.settings.languageDesc}</p>
+        </CardHeader>
+        <CardContent>
+          <div className="flex gap-3">
+            {(["es", "en"] as const).map((lang) => (
+              <button
+                key={lang}
+                type="button"
+                onClick={() => void setLocale(lang)}
+                className={cn(
+                  "flex items-center gap-2 rounded-lg border px-4 py-2.5 text-sm font-medium transition-colors",
+                  locale === lang
+                    ? "border-accent bg-accent/10 text-accent"
+                    : "border-border text-muted hover:border-accent/50 hover:text-foreground"
+                )}
+              >
+                <span>{lang === "es" ? "🇪🇸" : "🇺🇸"}</span>
+                {lang === "es" ? t.settings.langES : t.settings.langEN}
+              </button>
+            ))}
+          </div>
+        </CardContent>
+      </Card>
 
       <WeeklyResetWizard />
 
@@ -188,7 +217,7 @@ export default function SettingsPage() {
           onClick={() => void handleSignOut()}
         >
           <LogOut className="h-4 w-4" />
-          Cerrar sesión
+          {t.settings.signOut}
         </Button>
       </div>
     </div>

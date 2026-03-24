@@ -1,4 +1,5 @@
 import { createClient } from "@/lib/supabase/server";
+import { getT } from "@/lib/i18n/server";
 import { PageHeader } from "@/components/shared/PageHeader";
 import { ActivityFeed } from "@/components/gamification/leaderboard/ActivityFeed";
 import { LeaderboardPodium } from "@/components/gamification/leaderboard/LeaderboardPodium";
@@ -6,6 +7,7 @@ import { LeaderboardTable } from "@/components/gamification/leaderboard/Leaderbo
 import type { LeaderboardProfile } from "@/types/leaderboard";
 
 export default async function LeaderboardPage() {
+  const t = await getT();
   const supabase = await createClient();
   const { data } = await supabase
     .from("profiles")
@@ -21,21 +23,21 @@ export default async function LeaderboardPage() {
   return (
     <div className="mx-auto max-w-5xl space-y-8">
       <PageHeader
-        title="Clasificación"
-        description="Perfiles públicos ordenados por XP total. Haz tu perfil público en Ajustes para aparecer."
+        title={t.leaderboard.pageTitle}
+        description={t.leaderboard.pageDesc}
       />
 
       <div className="grid gap-8 lg:grid-cols-[1fr_280px]">
         <div className="space-y-8">
           <section aria-label="Tres primeros">
             <h2 className="mb-3 text-sm font-medium uppercase tracking-wide text-muted">
-              Líderes del Mes
+              {t.leaderboard.monthlyLeaders}
             </h2>
             <LeaderboardPodium topThree={topThree} />
           </section>
           <section aria-label="Clasificación">
             <h2 className="mb-3 text-sm font-medium uppercase tracking-wide text-muted">
-              Más posiciones
+              {t.leaderboard.moreRankings}
             </h2>
             <LeaderboardTable entries={rest} startRank={4} />
           </section>

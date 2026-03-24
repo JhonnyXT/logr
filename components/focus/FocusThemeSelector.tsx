@@ -5,6 +5,7 @@ import { cn } from "@/lib/utils/cn";
 import { useFocusTimer } from "@/hooks/useFocusTimer";
 import type { FocusTheme } from "@/types/focus";
 import { FOCUS_THEMES } from "@/types/focus";
+import { useLocale } from "@/contexts/locale-context";
 
 const THEME_ICONS: Record<FocusTheme, typeof Sparkles> = {
   minimal: Sparkles,
@@ -15,10 +16,11 @@ const THEME_ICONS: Record<FocusTheme, typeof Sparkles> = {
 
 export function FocusThemeSelector() {
   const { theme, setTheme } = useFocusTimer();
+  const { t } = useLocale();
 
   return (
     <div className="flex w-full max-w-xl flex-col gap-3">
-      <p className="text-center text-sm font-medium text-muted">Tema</p>
+      <p className="text-center text-sm font-medium text-muted">{t.focus.theme}</p>
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
       {FOCUS_THEMES.map(({ value, label }) => {
         const Icon = THEME_ICONS[value];

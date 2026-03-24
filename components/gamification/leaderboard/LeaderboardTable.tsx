@@ -1,6 +1,7 @@
 "use client";
 
 import { Badge } from "@/components/ui/badge";
+import { useLocale } from "@/contexts/locale-context";
 import { cn } from "@/lib/utils/cn";
 import type { LeaderboardProfile } from "@/types/leaderboard";
 
@@ -10,6 +11,7 @@ interface LeaderboardTableProps {
 }
 
 export function LeaderboardTable({ entries, startRank }: LeaderboardTableProps) {
+  const { t } = useLocale();
   if (entries.length === 0) return null;
 
   return (
@@ -17,9 +19,9 @@ export function LeaderboardTable({ entries, startRank }: LeaderboardTableProps) 
       <table className="w-full text-left text-sm">
         <thead>
           <tr className="border-b border-border text-xs uppercase tracking-wide text-muted">
-            <th className="px-4 py-3 font-medium">Puesto</th>
-            <th className="px-4 py-3 font-medium">Usuario</th>
-            <th className="px-4 py-3 font-medium text-right">Nivel</th>
+            <th className="px-4 py-3 font-medium">{t.leaderboard.rank}</th>
+            <th className="px-4 py-3 font-medium">{t.leaderboard.user}</th>
+            <th className="px-4 py-3 font-medium text-right">{t.leaderboard.level}</th>
             <th className="px-4 py-3 font-medium text-right">XP</th>
           </tr>
         </thead>

@@ -4,6 +4,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { Loader2 } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { noteContentToPlainText, plainTextToNoteContent } from "@/lib/notes/plain-content";
+import { useLocale } from "@/contexts/locale-context";
 import { cn } from "@/lib/utils/cn";
 import type { Note } from "@/types/notes";
 
@@ -13,6 +14,7 @@ interface NoteEditorProps {
 }
 
 export function NoteEditor({ note, onNoteUpdated }: NoteEditorProps) {
+  const { t } = useLocale();
   const [title, setTitle] = useState("");
   const [body, setBody] = useState("");
   const [saveStatus, setSaveStatus] = useState<"idle" | "saving" | "saved">("idle");
@@ -36,7 +38,7 @@ export function NoteEditor({ note, onNoteUpdated }: NoteEditorProps) {
 
       setSaveStatus("saving");
       const supabase = createClient();
-      const trimmed = nextTitle.trim() || "Sin título";
+      const trimmed = nextTitle.trim() || t.notes.untitled;
       const content = plainTextToNoteContent(nextBody);
 
       const { data, error } = await supabase
@@ -87,11 +89,11 @@ export function NoteEditor({ note, onNoteUpdated }: NoteEditorProps) {
 
   useEffect(() => {
     if (note) {
-      const t = note.title;
+      const titleVal = note.title;
       const b = noteContentToPlainText(note.content);
-      setTitle(t);
+      setTitle(titleVal);
       setBody(b);
-      lastSavedRef.current = { title: t, body: b };
+      lastSavedRef.current = { title: titleVal, body: b };
     } else {
       setTitle("");
       setBody("");
@@ -127,8 +129,8 @@ export function NoteEditor({ note, onNoteUpdated }: NoteEditorProps) {
     return (
       <div className="flex min-h-[320px] flex-1 flex-col items-center justify-center gap-2 rounded-xl border border-dashed border-border bg-background/40 p-8 text-center">
         <div className="flex flex-col gap-1">
-          <p className="text-sm font-medium text-foreground">Ninguna nota seleccionada</p>
-          <p className="text-sm text-muted">Selecciona una nota del menú lateral</p>
+          <p className="text-sm font-medium text-foreground">{t.notes.noNoteSelected}</p>
+          <p className="text-sm text-muted">{t.notes.selectNote}</p>
         </div>
       </div>
     );
@@ -146,17 +148,17 @@ export function NoteEditor({ note, onNoteUpdated }: NoteEditorProps) {
             "min-w-0 flex-1 border-none bg-transparent text-xl font-semibold text-foreground",
             "placeholder:text-muted focus:outline-none focus:ring-0"
           )}
-          placeholder="Sin título"
+          placeholder={t.notes.titlePlaceholder}
           aria-label="Título de la nota"
         />
         <span className="shrink-0 text-xs text-muted" aria-live="polite">
           {saveStatus === "saving" ? (
             <span className="inline-flex items-center gap-1">
               <Loader2 className="h-3.5 w-3.5 animate-spin" />
-              Guardando…
+              {t.notes.saving}
             </span>
           ) : saveStatus === "saved" ? (
-            "Guardado"
+            t.notes.saved
           ) : null}
         </span>
       </div>
@@ -169,7 +171,7 @@ export function NoteEditor({ note, onNoteUpdated }: NoteEditorProps) {
           "text-sm leading-relaxed text-foreground placeholder:text-muted",
           "focus:border-accent/50 focus:outline-none focus:ring-1 focus:ring-accent/30"
         )}
-        placeholder="Escribe algo… (texto plano por ahora; editor enriquecido más adelante)"
+        placeholder={t.notes.bodyPlaceholder}
         aria-label="Contenido de la nota"
       />
     </div>

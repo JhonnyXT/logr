@@ -5,6 +5,7 @@ import { useGoals } from "@/hooks/useGoals";
 import { useXp } from "@/hooks/useXp";
 import { Button } from "@/components/ui/button";
 import type { GoalMilestone } from "@/types/goals";
+import { useLocale } from "@/contexts/locale-context";
 
 interface MilestoneListProps {
   goalId: string;
@@ -12,6 +13,7 @@ interface MilestoneListProps {
 }
 
 export function MilestoneList({ goalId, milestones }: MilestoneListProps) {
+  const { t } = useLocale();
   const { addMilestone, toggleMilestone } = useGoals();
   const { awardXp } = useXp();
   const [draft, setDraft] = useState("");
@@ -38,11 +40,11 @@ export function MilestoneList({ goalId, milestones }: MilestoneListProps) {
   return (
     <div className="space-y-3 border-t border-border pt-4">
       <p className="text-xs font-medium uppercase tracking-wide text-muted">
-        Hitos
+        {t.goals.milestones}
       </p>
       <ul className="space-y-2">
         {milestones.length === 0 ? (
-          <li className="text-sm text-muted">Sin hitos aún — agrega uno abajo.</li>
+          <li className="text-sm text-muted">{t.goals.noMilestones}</li>
         ) : (
           milestones.map((m) => (
             <li key={m.id} className="flex items-start gap-3">
@@ -69,7 +71,7 @@ export function MilestoneList({ goalId, milestones }: MilestoneListProps) {
         <input
           value={draft}
           onChange={(e) => setDraft(e.target.value)}
-          placeholder="Agregar hito"
+          placeholder={t.goals.addMilestone}
           className="min-w-0 flex-1 rounded-lg border border-border bg-background px-3 py-2 text-sm text-foreground placeholder:text-muted focus:outline-none focus:ring-2 focus:ring-accent/40"
         />
         <Button
@@ -78,7 +80,7 @@ export function MilestoneList({ goalId, milestones }: MilestoneListProps) {
           size="sm"
           disabled={addMilestone.isPending || !draft.trim()}
         >
-          Agregar
+          {t.goals.addMilestone}
         </Button>
       </form>
     </div>

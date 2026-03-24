@@ -18,16 +18,18 @@ import { DefinitionOfSuccess } from "@/components/vision-board/DefinitionOfSucce
 import { OdysseyPlan } from "@/components/vision-board/OdysseyPlan";
 import { FutureCalendar } from "@/components/vision-board/FutureCalendar";
 import { useUserLevel } from "@/hooks/useUserLevel";
+import { useLocale } from "@/contexts/locale-context";
 
 const PREVIEW_ICONS = [Scroll, ListChecks, Compass, Trophy, MapPin, Calendar] as const;
 
 function VisionLockedPreview() {
+  const { t } = useLocale();
   return (
     <div className="space-y-8">
       <PageHeader
-        title="Vision"
-        subtitle="Diseña tu vida ideal"
-        description="Aclara la dirección con ejercicios guiados — se desbloquea al subir de nivel."
+        title={t.vision.pageTitle}
+        subtitle={t.vision.subtitle}
+        description={t.vision.pageDesc}
       />
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {PREVIEW_ICONS.map((Icon, i) => (
@@ -46,9 +48,10 @@ function VisionLockedPreview() {
 }
 
 function VisionBoardContent() {
+  const { t } = useLocale();
   return (
     <div className="mx-auto max-w-7xl space-y-8">
-      <PageHeader title="Vision" subtitle="Diseña tu vida ideal" />
+      <PageHeader title={t.vision.pageTitle} subtitle={t.vision.subtitle} />
       <div className="grid gap-6 sm:grid-cols-2 xl:grid-cols-3">
         <EulogyMethod />
         <BucketList />

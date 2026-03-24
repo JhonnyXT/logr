@@ -11,17 +11,19 @@ import { GoalCard } from "@/components/goals/GoalCard";
 import { GoalForm } from "@/components/goals/GoalForm";
 import { useGoals } from "@/hooks/useGoals";
 import { useUserLevel } from "@/hooks/useUserLevel";
+import { useLocale } from "@/contexts/locale-context";
 
 function GoalsLockedPreview() {
+  const { t } = useLocale();
   return (
     <div className="space-y-8">
       <PageHeader
-        title="Metas"
-        description="Conecta la dirección a largo plazo con el trabajo diario."
+        title={t.goals.pageTitle}
+        description={t.goals.pageDesc}
         action={
           <Button type="button" variant="accent" size="md" disabled>
             <Plus className="h-4 w-4" />
-            Nueva meta
+            {t.goals.newGoal}
           </Button>
         }
       />
@@ -44,18 +46,19 @@ function GoalsLockedPreview() {
 }
 
 function GoalsContent() {
+  const { t } = useLocale();
   const [open, setOpen] = useState(false);
   const { goals, isLoading } = useGoals(true);
 
   return (
     <div className="space-y-8">
       <PageHeader
-        title="Metas"
-        description="Conecta la dirección a largo plazo con el trabajo diario."
+        title={t.goals.pageTitle}
+        description={t.goals.pageDesc}
         action={
           <Button type="button" variant="accent" size="md" onClick={() => setOpen(true)}>
             <Plus className="h-4 w-4" />
-            Nueva meta
+            {t.goals.newGoal}
           </Button>
         }
       />

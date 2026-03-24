@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { createClient } from "@/lib/supabase/client";
 import { cn } from "@/lib/utils/cn";
+import { useLocale } from "@/contexts/locale-context";
 
 const inputClassName = cn(
   "w-full rounded-lg border border-border bg-background px-3 py-2.5 text-sm text-foreground shadow-sm",
@@ -17,6 +18,7 @@ const inputClassName = cn(
 );
 
 export default function RegisterPage() {
+  const { t } = useLocale();
   const router = useRouter();
   const formId = useId();
   const usernameId = `${formId}-username`;
@@ -46,12 +48,12 @@ export default function RegisterPage() {
       .value;
 
     if (!username || !fullName || !email || !password) {
-      setError("Por favor completa todos los campos.");
+      setError(t.auth.fillFields);
       return;
     }
 
     if (password.length < 8) {
-      setError("La contraseña debe tener al menos 8 caracteres.");
+      setError(t.auth.passwordShort);
       return;
     }
 
@@ -80,17 +82,15 @@ export default function RegisterPage() {
       return;
     }
 
-    setSuccessMessage(
-      "Revisa tu correo para confirmar tu cuenta antes de iniciar sesión."
-    );
+    setSuccessMessage(t.auth.checkEmail);
   }
 
   return (
     <Card className="border-border/80 shadow-lg shadow-black/20">
       <CardHeader className="pb-2">
-        <CardTitle className="text-xl">Crear cuenta</CardTitle>
+        <CardTitle className="text-xl">{t.auth.createAccount}</CardTitle>
         <p className="text-sm text-muted">
-          Comienza a trackear hábitos y metas con una sola cuenta.
+          {t.auth.startTracking}
         </p>
       </CardHeader>
       <CardContent>
@@ -111,7 +111,7 @@ export default function RegisterPage() {
               htmlFor={usernameId}
               className="block text-sm font-medium text-foreground"
             >
-              Usuario
+              {t.auth.username}
             </label>
             <input
               id={usernameId}
@@ -131,7 +131,7 @@ export default function RegisterPage() {
               htmlFor={fullNameId}
               className="block text-sm font-medium text-foreground"
             >
-              Nombre completo
+              {t.auth.fullName}
             </label>
             <input
               id={fullNameId}
@@ -150,7 +150,7 @@ export default function RegisterPage() {
               htmlFor={emailId}
               className="block text-sm font-medium text-foreground"
             >
-              Correo electrónico
+              {t.auth.email}
             </label>
             <input
               id={emailId}
@@ -169,7 +169,7 @@ export default function RegisterPage() {
               htmlFor={passwordId}
               className="block text-sm font-medium text-foreground"
             >
-              Contraseña
+              {t.auth.password}
             </label>
             <div className="relative">
               <input
@@ -188,7 +188,7 @@ export default function RegisterPage() {
                 type="button"
                 onClick={() => setShowPassword((v) => !v)}
                 className="absolute right-3 top-1/2 -translate-y-1/2 text-muted hover:text-foreground transition-colors"
-                aria-label={showPassword ? "Ocultar contraseña" : "Mostrar contraseña"}
+                aria-label={showPassword ? t.auth.hidePassword : t.auth.showPassword}
               >
                 {showPassword ? (
                   <EyeOff className="h-4 w-4" />
@@ -198,7 +198,7 @@ export default function RegisterPage() {
               </button>
             </div>
             <p id={`${passwordId}-hint`} className="text-xs text-muted">
-              Mínimo 8 caracteres.
+              {t.auth.passwordHint}
             </p>
           </div>
 
@@ -232,16 +232,16 @@ export default function RegisterPage() {
             disabled={pending || !!successMessage}
             aria-busy={pending}
           >
-            {pending ? "Creando cuenta…" : "Crear cuenta"}
+            {pending ? t.auth.creatingAccount : t.auth.createAccount}
           </Button>
 
           <p className="text-center text-sm text-muted">
-            ¿Ya tienes cuenta?{" "}
+            {t.auth.haveAccount}{" "}
             <Link
               href="/login"
               className="font-medium text-accent underline-offset-4 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/50 rounded-sm"
             >
-              Iniciar sesión
+              {t.auth.signInLink}
             </Link>
           </p>
         </form>

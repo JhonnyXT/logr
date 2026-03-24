@@ -12,64 +12,31 @@ import {
 } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { useXp } from "@/hooks/useXp";
+import { useLocale } from "@/contexts/locale-context";
 import { getWeekStartDateString } from "@/lib/weekly-reset/week";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { cn } from "@/lib/utils/cn";
 
-const CATEGORIES = [
-  {
-    key: "home",
-    title: "Hogar",
-    description: "Organiza y limpia tu espacio",
-    icon: Home,
-  },
-  {
-    key: "mind",
-    title: "Mente",
-    description: "Lee, aprende o medita",
-    icon: Brain,
-  },
-  {
-    key: "body",
-    title: "Cuerpo",
-    description: "Haz ejercicio y aliméntate bien",
-    icon: Dumbbell,
-  },
-  {
-    key: "digital",
-    title: "Digital",
-    description: "Limpia tu bandeja, actualiza apps",
-    icon: Monitor,
-  },
-  {
-    key: "finances",
-    title: "Finanzas",
-    description: "Revisa tu presupuesto y gastos",
-    icon: DollarSign,
-  },
-  {
-    key: "social",
-    title: "Social",
-    description: "Comunícate con alguien",
-    icon: Users,
-  },
-] as const;
+const CATEGORY_KEYS = ["home", "mind", "body", "digital", "finances", "social"] as const;
+type CategoryKey = (typeof CATEGORY_KEYS)[number];
 
-type CategoryKey = (typeof CATEGORIES)[number]["key"];
-
-const initialChecks = (): Record<CategoryKey, boolean> => ({
-  home: false,
-  mind: false,
-  body: false,
-  digital: false,
-  finances: false,
-  social: false,
-});
+const initialChecks = (): Record<CategoryKey, boolean> =>
+  Object.fromEntries(CATEGORY_KEYS.map((k) => [k, false])) as Record<CategoryKey, boolean>;
 
 export function WeeklyResetWizard() {
+  const { t } = useLocale();
   const { awardXp } = useXp();
+
+  const CATEGORIES = [
+    { key: "home" as CategoryKey, title: t.reset.catHome, description: t.reset.homeDesc, icon: Home },
+    { key: "mind" as CategoryKey, title: t.reset.catMind, description: t.reset.mindDesc, icon: Brain },
+    { key: "body" as CategoryKey, title: t.reset.catBody, description: t.reset.bodyDesc, icon: Dumbbell },
+    { key: "digital" as CategoryKey, title: t.reset.catDigital, description: t.reset.digitalDesc, icon: Monitor },
+    { key: "finances" as CategoryKey, title: t.reset.catFinances, description: t.reset.financesDesc, icon: DollarSign },
+    { key: "social" as CategoryKey, title: t.reset.catSocial, description: t.reset.socialDesc, icon: Users },
+  ];
   const [checks, setChecks] = useState<Record<CategoryKey, boolean>>(initialChecks);
   const [weekStart, setWeekStart] = useState(() => getWeekStartDateString());
   const [completedThisWeek, setCompletedThisWeek] = useState(false);
@@ -78,7 +45,7 @@ export function WeeklyResetWizard() {
   const [error, setError] = useState<string | null>(null);
 
   const doneCount = useMemo(
-    () => CATEGORIES.filter((c) => checks[c.key]).length,
+    () => CATEGORY_KEYS.filter((k) => checks[k]).length,
     [checks]
   );
 
@@ -108,8 +75,8 @@ export function WeeklyResetWizard() {
       if (cats && typeof cats === "object") {
         setChecks((prev) => {
           const next = { ...prev };
-          for (const k of CATEGORIES) {
-            if (typeof cats[k.key] === "boolean") next[k.key] = cats[k.key]!;
+          for (const k of CATEGORY_KEYS) {
+            if (typeof cats[k] === "boolean") next[k] = cats[k]!;
           }
           return next;
         });
@@ -139,7 +106,7 @@ export function WeeklyResetWizard() {
     }
 
     const categories = Object.fromEntries(
-      CATEGORIES.map((c) => [c.key, true])
+      CATEGORY_KEYS.map((k) => [k, true])
     ) as Record<CategoryKey, boolean>;
 
     const { error: insertError } = await supabase.from("weekly_resets").insert({
@@ -155,7 +122,7 @@ export function WeeklyResetWizard() {
       return;
     }
 
-    await awardXp(50, "weekly_reset", undefined, "¡Reinicio semanal completado!");
+    await awardXp(50, "weekly_reset", undefined, t.reset.xpComplete);
     setCompletedThisWeek(true);
     setSubmitting(false);
   }
@@ -163,7 +130,7 @@ export function WeeklyResetWizard() {
   if (loading) {
     return (
       <Card>
-        <CardContent className="py-8 text-center text-sm text-muted">Cargando…</CardContent>
+        <CardContent className="py-8 text-center text-sm text-muted">{t.common.loading}</CardContent>
       </Card>
     );
   }
@@ -171,7 +138,7 @@ export function WeeklyResetWizard() {
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="text-lg">Reinicio Semanal</CardTitle>
+        <CardTitle className="text-lg">{t.reset.title}</CardTitle>
         <p className="text-sm text-muted">
           Revisa seis áreas. Completa las seis para ganar{" "}
           <span className="font-medium text-accent">50 XP</span>.
@@ -180,7 +147,7 @@ export function WeeklyResetWizard() {
           <div className="mb-1 flex justify-between text-xs text-muted">
             <span>Progreso</span>
             <span>
-              {doneCount}/6 completadas
+              {doneCount}/6 {t.reset.progressOf}
             </span>
           </div>
           <Progress value={doneCount} max={6} className="h-2" />
@@ -189,8 +156,7 @@ export function WeeklyResetWizard() {
       <CardContent className="space-y-3">
         {completedThisWeek ? (
           <p className="rounded-lg border border-accent/30 bg-accent/10 px-3 py-2 text-sm text-foreground">
-            Ya completado esta semana. Reinicio registrado para la semana que empieza el{" "}
-            <span className="font-medium">{weekStart}</span>.
+            {t.reset.alreadyDone}{" — "}{weekStart}.
           </p>
         ) : null}
 
@@ -235,7 +201,7 @@ export function WeeklyResetWizard() {
           disabled={doneCount < 6 || completedThisWeek || submitting}
           onClick={() => void handleComplete()}
         >
-          {submitting ? "Guardando…" : "Completar reinicio"}
+          {submitting ? t.common.saving : t.reset.completeReset}
         </Button>
       </CardContent>
     </Card>

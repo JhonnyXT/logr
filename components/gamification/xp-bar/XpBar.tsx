@@ -4,6 +4,7 @@ import { xpProgress } from "@/lib/gamification/xp-engine";
 import { Progress } from "@/components/ui/progress";
 import { LevelBadge } from "@/components/gamification/xp-bar/LevelBadge";
 import { cn } from "@/lib/utils/cn";
+import { useLocale } from "@/contexts/locale-context";
 
 interface XpBarProps {
   totalXp: number;
@@ -14,6 +15,7 @@ interface XpBarProps {
 }
 
 export function XpBar({ totalXp, level, rank, rankColor, className }: XpBarProps) {
+  const { t } = useLocale();
   const { xpInLevel, xpNeeded, currentLevel } = xpProgress(totalXp);
   const displayLevel = level || currentLevel;
 
@@ -45,7 +47,7 @@ export function XpBar({ totalXp, level, rank, rankColor, className }: XpBarProps
         <span className="text-foreground">{xpInLevel}</span>
         <span className="text-muted"> / </span>
         <span>{xpNeeded}</span>
-        <span className="hidden sm:inline"> pts</span>
+        <span className="hidden sm:inline"> {t.xp.pts}</span>
       </p>
     </div>
   );

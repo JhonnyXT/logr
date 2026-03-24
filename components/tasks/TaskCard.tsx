@@ -10,6 +10,7 @@ import { cn } from "@/lib/utils/cn";
 import { formatDate } from "@/lib/utils/date";
 import { useTasks } from "@/hooks/useTasks";
 import { useXp } from "@/hooks/useXp";
+import { useLocale } from "@/contexts/locale-context";
 import type { Task, TaskPriority } from "@/types/tasks";
 
 const PRIORITY_VARIANT: Record<
@@ -20,13 +21,6 @@ const PRIORITY_VARIANT: Record<
   medium: "default",
   high: "warning",
   critical: "destructive",
-};
-
-const PRIORITY_LABELS: Record<TaskPriority, string> = {
-  low: "Baja",
-  medium: "Media",
-  high: "Alta",
-  critical: "Crítica",
 };
 
 function isOverdue(dueDate?: string): boolean {
@@ -42,8 +36,16 @@ interface TaskCardProps {
 export function TaskCard({ task }: TaskCardProps) {
   const { completeTask, setMainTask } = useTasks();
   const { awardXp } = useXp();
+  const { t } = useLocale();
   const [busy, setBusy] = useState(false);
   const [starBusy, setStarBusy] = useState(false);
+
+  const PRIORITY_LABELS: Record<TaskPriority, string> = {
+    low: t.tasks.priorityLow,
+    medium: t.tasks.priorityMedium,
+    high: t.tasks.priorityHigh,
+    critical: t.tasks.priorityCritical,
+  };
 
   const overdue = task.dueDate ? isOverdue(task.dueDate) : false;
 
@@ -56,7 +58,7 @@ export function TaskCard({ task }: TaskCardProps) {
         xp,
         "task",
         task.id,
-        task.isMainTask ? "¡Tarea principal completada!" : "¡Tarea completada!"
+        task.isMainTask ? t.tasks.xpMainComplete : t.tasks.xpComplete
       );
     } finally {
       setBusy(false);
@@ -115,10 +117,10 @@ export function TaskCard({ task }: TaskCardProps) {
                     : "text-muted hover:text-amber-400/90"
                 )}
                 aria-label={
-                  task.isMainTask ? "Tarea principal" : "Marcar como enfoque principal"
+                  task.isMainTask ? t.tasks.mainFocusTitle : t.tasks.setMainFocus
                 }
                 title={
-                  task.isMainTask ? "Tarea principal" : "Marcar como enfoque principal"
+                  task.isMainTask ? t.tasks.mainFocusTitle : t.tasks.setMainFocus
                 }
               >
                 <Star
@@ -155,7 +157,7 @@ export function TaskCard({ task }: TaskCardProps) {
                 <Calendar className="h-3.5 w-3.5 shrink-0" aria-hidden />
               )}
               <span>{formatDate(task.dueDate, "PP")}</span>
-              {overdue ? <span className="text-destructive">Vencida</span> : null}
+              {overdue ? <span className="text-destructive">{t.tasks.overdue}</span> : null}
             </div>
           ) : null}
         </div>

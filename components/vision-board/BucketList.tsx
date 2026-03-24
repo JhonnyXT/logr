@@ -5,8 +5,10 @@ import { ListChecks } from "lucide-react";
 import { VisionBoardCard } from "@/components/vision-board/VisionBoardCard";
 import { Button } from "@/components/ui/button";
 import { useBucketListItems } from "@/hooks/useVisionBoard";
+import { useLocale } from "@/contexts/locale-context";
 
 export function BucketList() {
+  const { t } = useLocale();
   const { items, isLoading, addItem, toggleDone } = useBucketListItems();
   const [draft, setDraft] = useState("");
 
@@ -23,8 +25,8 @@ export function BucketList() {
   return (
     <VisionBoardCard
       icon={ListChecks}
-      title="Lista de deseos"
-      subtitle={`${doneCount}/${total} completados`}
+      title={t.vision.bucketTitle}
+      subtitle={`${doneCount}/${total} ${t.vision.completedOf}`}
       saveStatus="Los cambios se guardan al instante"
     >
       <ul className="space-y-2">
@@ -65,7 +67,7 @@ export function BucketList() {
         <input
           value={draft}
           onChange={(e) => setDraft(e.target.value)}
-          placeholder="Agregar elemento..."
+          placeholder={t.vision.bucketAdd}
           className="min-w-0 flex-1 rounded-lg border border-border bg-background px-3 py-2 text-sm text-foreground placeholder:text-muted focus:outline-none focus:ring-2 focus:ring-accent/40"
         />
         <Button
@@ -74,7 +76,7 @@ export function BucketList() {
           size="sm"
           disabled={addItem.isPending || !draft.trim()}
         >
-          Agregar
+          {t.vision.bucketAddBtn}
         </Button>
       </form>
     </VisionBoardCard>

@@ -6,6 +6,7 @@ import { GridCell, getIntensity, type IntensityLevel } from "./GridCell";
 import { GridTooltip } from "./GridTooltip";
 import { cn } from "@/lib/utils/cn";
 import type { ActivityDay } from "@/types/gamification";
+import { useLocale } from "@/contexts/locale-context";
 
 interface ActivityGridProps {
   year?: number;
@@ -17,6 +18,7 @@ const DAY_LABELS = ["", "Mon", "", "Wed", "", "Fri", ""];
 const MONTH_LABELS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
 export function ActivityGrid({ year, data, className }: ActivityGridProps) {
+  const { t } = useLocale();
   const currentYear = year ?? new Date().getFullYear();
   const [tooltip, setTooltip] = useState<{
     date: string;
@@ -107,10 +109,10 @@ export function ActivityGrid({ year, data, className }: ActivityGridProps) {
     <div className={cn("space-y-3", className)}>
       <div className="flex items-baseline justify-between">
         <h3 className="text-sm font-medium text-foreground">
-          Actividad {currentYear}
+          {t.xp.activityTitle} {currentYear}
         </h3>
         <p className="text-xs text-muted">
-          {totalActions.toLocaleString()} {totalActions === 1 ? "contribución" : "contribuciones"}
+          {totalActions.toLocaleString()} {totalActions === 1 ? t.xp.contribution : t.xp.contributions}
         </p>
       </div>
 
@@ -173,7 +175,7 @@ export function ActivityGrid({ year, data, className }: ActivityGridProps) {
           </div>
 
           <div className="mt-2 flex items-center justify-end gap-1 text-[10px] text-muted">
-            <span>Menos</span>
+            <span>{t.xp.less}</span>
             {([0, 1, 2, 3, 4] as IntensityLevel[]).map((level) => (
               <div
                 key={level}
@@ -187,7 +189,7 @@ export function ActivityGrid({ year, data, className }: ActivityGridProps) {
                 )}
               />
             ))}
-            <span>Más</span>
+            <span>{t.xp.more}</span>
           </div>
         </div>
       </div>

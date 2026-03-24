@@ -2,6 +2,7 @@
 
 import { Flame } from "lucide-react";
 import { cn } from "@/lib/utils/cn";
+import { useLocale } from "@/contexts/locale-context";
 
 interface StreakCounterProps {
   streak: number;
@@ -10,6 +11,7 @@ interface StreakCounterProps {
 
 export function StreakCounter({ streak, className }: StreakCounterProps) {
   const active = streak > 0;
+  const { t } = useLocale();
 
   return (
     <span
@@ -18,7 +20,7 @@ export function StreakCounter({ streak, className }: StreakCounterProps) {
         active ? "text-amber-400" : "text-muted",
         className
       )}
-      title={active ? `${streak} días de racha` : "Sin racha aún"}
+      title={active ? `${streak} ${t.habits.daysStreak}` : t.habits.noStreak}
     >
       <Flame
         className={cn(

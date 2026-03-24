@@ -6,28 +6,30 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils/cn";
 import { useGoals } from "@/hooks/useGoals";
 import type { GoalCategory, GoalHorizon } from "@/types/goals";
-
-const CATEGORIES: { value: GoalCategory; label: string }[] = [
-  { value: "career", label: "Carrera" },
-  { value: "health", label: "Salud" },
-  { value: "financial", label: "Finanzas" },
-  { value: "relationships", label: "Relaciones" },
-  { value: "growth", label: "Crecimiento" },
-];
-
-const HORIZONS: { value: GoalHorizon; label: string }[] = [
-  { value: "quarterly", label: "Trimestral" },
-  { value: "1year", label: "1 año" },
-  { value: "3years", label: "3 años" },
-];
+import { useLocale } from "@/contexts/locale-context";
 
 interface GoalFormProps {
   onSuccess?: () => void;
 }
 
 export function GoalForm({ onSuccess }: GoalFormProps) {
+  const { t } = useLocale();
   const { createGoal } = useGoals();
   const [title, setTitle] = useState("");
+
+  const CATEGORIES: { value: GoalCategory; label: string }[] = [
+    { value: "career", label: t.goals.catCareer },
+    { value: "health", label: t.goals.catHealth },
+    { value: "financial", label: t.goals.catFinancial },
+    { value: "relationships", label: t.goals.catRelationships },
+    { value: "growth", label: t.goals.catGrowth },
+  ];
+
+  const HORIZONS: { value: GoalHorizon; label: string }[] = [
+    { value: "quarterly", label: t.goals.quarterly },
+    { value: "1year", label: t.goals.oneYear },
+    { value: "3years", label: t.goals.threeYears },
+  ];
   const [description, setDescription] = useState("");
   const [category, setCategory] = useState<GoalCategory>("career");
   const [horizon, setHorizon] = useState<GoalHorizon>("quarterly");
@@ -55,11 +57,11 @@ export function GoalForm({ onSuccess }: GoalFormProps) {
 
   return (
     <form onSubmit={(e) => void handleSubmit(e)} className="space-y-5 pt-1">
-      <DialogTitle className="pr-8">Nueva meta</DialogTitle>
+      <DialogTitle className="pr-8">{t.goals.newGoal}</DialogTitle>
 
       <div className="space-y-2">
         <label htmlFor="goal-title" className="text-sm font-medium text-foreground">
-          Título
+          {t.goals.titleLabel}
         </label>
         <input
           id="goal-title"
@@ -73,7 +75,7 @@ export function GoalForm({ onSuccess }: GoalFormProps) {
 
       <div className="space-y-2">
         <label htmlFor="goal-desc" className="text-sm font-medium text-foreground">
-          Descripción
+          {t.goals.descriptionLabel}
         </label>
         <textarea
           id="goal-desc"
@@ -86,7 +88,7 @@ export function GoalForm({ onSuccess }: GoalFormProps) {
       </div>
 
       <div className="space-y-2">
-        <span className="text-sm font-medium text-foreground">Categoría</span>
+        <span className="text-sm font-medium text-foreground">{t.goals.category}</span>
         <div className="flex flex-wrap gap-2">
           {CATEGORIES.map((c) => (
             <button
@@ -107,7 +109,7 @@ export function GoalForm({ onSuccess }: GoalFormProps) {
       </div>
 
       <fieldset className="space-y-2">
-        <legend className="text-sm font-medium text-foreground">Horizonte</legend>
+        <legend className="text-sm font-medium text-foreground">{t.goals.horizon}</legend>
         <div className="flex flex-wrap gap-3">
           {HORIZONS.map((h) => (
             <label
@@ -135,7 +137,7 @@ export function GoalForm({ onSuccess }: GoalFormProps) {
 
       <div className="space-y-2">
         <label htmlFor="goal-target" className="text-sm font-medium text-foreground">
-          Fecha objetivo
+          {t.goals.targetDate}
         </label>
         <input
           id="goal-target"
@@ -152,7 +154,7 @@ export function GoalForm({ onSuccess }: GoalFormProps) {
           variant="accent"
           disabled={createGoal.isPending || !title.trim()}
         >
-          {createGoal.isPending ? "Guardando…" : "Crear meta"}
+          {createGoal.isPending ? t.goals.saving : t.goals.createGoal}
         </Button>
       </div>
     </form>

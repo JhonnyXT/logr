@@ -23,6 +23,7 @@ import { useSidebarStore } from "@/stores/sidebar-store";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils/cn";
 import type { DashboardUserProfile } from "@/types/dashboard";
+import { useLocale } from "@/contexts/locale-context";
 
 interface NavItem {
   href: string;
@@ -31,32 +32,33 @@ interface NavItem {
   minLevel?: number;
 }
 
-const NAV_MAIN: NavItem[] = [
-  { href: "/dashboard", label: "Inicio", icon: LayoutDashboard },
-  { href: "/habits", label: "Hábitos", icon: Repeat },
-  { href: "/tasks", label: "Tareas", icon: CheckSquare },
-  { href: "/focus", label: "Enfoque", icon: Timer },
-  { href: "/journal", label: "Diario", icon: BookOpen },
-  { href: "/goals", label: "Metas", icon: Target, minLevel: 5 },
-  { href: "/vision-board", label: "Vision", icon: Eye, minLevel: 3 },
-  { href: "/notes", label: "Notas", icon: FileText, minLevel: 7 },
-];
-
-const NAV_BOTTOM: NavItem[] = [
-  { href: "/leaderboard", label: "Clasificación", icon: Trophy },
-  { href: "/settings", label: "Ajustes", icon: Settings },
-];
-
 interface SidebarProps {
   userLevel: number;
   profile: DashboardUserProfile;
 }
 
 export function Sidebar({ userLevel, profile }: SidebarProps) {
+  const { t } = useLocale();
   const pathname = usePathname();
   const router = useRouter();
   const isOpen = useSidebarStore((s) => s.isOpen);
   const toggle = useSidebarStore((s) => s.toggle);
+
+  const NAV_MAIN: NavItem[] = [
+    { href: "/dashboard", label: t.nav.home, icon: LayoutDashboard },
+    { href: "/habits", label: t.nav.habits, icon: Repeat },
+    { href: "/tasks", label: t.nav.tasks, icon: CheckSquare },
+    { href: "/focus", label: t.nav.focus, icon: Timer },
+    { href: "/journal", label: t.nav.journal, icon: BookOpen },
+    { href: "/goals", label: t.nav.goals, icon: Target, minLevel: 5 },
+    { href: "/vision-board", label: t.nav.vision, icon: Eye, minLevel: 3 },
+    { href: "/notes", label: t.nav.notes, icon: FileText, minLevel: 7 },
+  ];
+
+  const NAV_BOTTOM: NavItem[] = [
+    { href: "/leaderboard", label: t.nav.leaderboard, icon: Trophy },
+    { href: "/settings", label: t.nav.settings, icon: Settings },
+  ];
 
   const expanded = isOpen;
   const widthClass = expanded ? "w-[240px]" : "w-16";
@@ -123,7 +125,7 @@ export function Sidebar({ userLevel, profile }: SidebarProps) {
       return (
         <span
           className={className}
-          title={`Se desbloquea en nivel ${item.minLevel}`}
+          title={`${t.xp.lockedDescPre} ${item.minLevel} ${t.xp.lockedDescPost}`}
           aria-disabled
         >
           {content}
@@ -170,7 +172,7 @@ export function Sidebar({ userLevel, profile }: SidebarProps) {
             size="icon"
             className="h-9 w-9 shrink-0"
             onClick={toggle}
-            aria-label="Colapsar menú"
+            aria-label={t.nav.collapse}
           >
             <ChevronLeft className="h-4 w-4" />
           </Button>
@@ -206,7 +208,7 @@ export function Sidebar({ userLevel, profile }: SidebarProps) {
         >
           <LogOut className="h-[18px] w-[18px] shrink-0" />
           <span className={cn("text-sm font-medium", expanded ? "" : "sr-only")}>
-            Cerrar sesión
+            {t.nav.signOut}
           </span>
         </Button>
       </div>
@@ -218,7 +220,7 @@ export function Sidebar({ userLevel, profile }: SidebarProps) {
           size="icon"
           className="absolute right-0 top-14 flex h-9 w-9 translate-x-1/2 rounded-full border border-border bg-surface shadow-md"
           onClick={toggle}
-          aria-label="Expandir menú"
+          aria-label={t.nav.expand}
         >
           <ChevronRight className="h-4 w-4" />
         </Button>

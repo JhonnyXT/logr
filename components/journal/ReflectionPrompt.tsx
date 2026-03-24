@@ -4,6 +4,7 @@ import { useCallback } from "react";
 import { Shuffle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils/cn";
+import { useLocale } from "@/contexts/locale-context";
 
 interface ReflectionPromptProps {
   prompts: string[];
@@ -30,6 +31,7 @@ export function ReflectionPrompt({
   onPromptChange,
   className,
 }: ReflectionPromptProps) {
+  const { t } = useLocale();
   const shuffle = useCallback(() => {
     onPromptChange(pickRandom(prompts, prompt));
   }, [prompts, prompt, onPromptChange]);
@@ -43,7 +45,7 @@ export function ReflectionPrompt({
     >
       <div className="flex items-start justify-between gap-3">
         <blockquote className="flex-1 border-l-2 border-accent/50 pl-4">
-          <p className="text-xs font-medium text-muted">Prompt de hoy:</p>
+          <p className="text-xs font-medium text-muted">{t.journal.promptToday}</p>
           <p className="mt-1 text-sm italic leading-relaxed text-foreground/90">
             &ldquo;{prompt}&rdquo;
           </p>
@@ -56,7 +58,7 @@ export function ReflectionPrompt({
           onClick={shuffle}
         >
           <Shuffle className="h-4 w-4" aria-hidden />
-          Cambiar prompt
+          {t.journal.shufflePrompt}
         </Button>
       </div>
     </div>

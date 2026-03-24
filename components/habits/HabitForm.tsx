@@ -5,6 +5,7 @@ import { DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils/cn";
 import { useHabits } from "@/hooks/useHabits";
+import { useLocale } from "@/contexts/locale-context";
 import type { HabitFrequency } from "@/types/habits";
 
 const COLOR_PRESETS = [
@@ -16,13 +17,6 @@ const COLOR_PRESETS = [
   "#ec4899",
   "#06b6d4",
   "#e2e8f0",
-];
-
-const FREQUENCIES: { value: HabitFrequency; label: string }[] = [
-  { value: "daily", label: "Diario" },
-  { value: "weekdays", label: "Días de semana" },
-  { value: "weekly", label: "Semanal" },
-  { value: "specific_days", label: "Días específicos" },
 ];
 
 function targetDaysForFrequency(frequency: HabitFrequency): number[] {
@@ -46,6 +40,7 @@ interface HabitFormProps {
 
 export function HabitForm({ onSuccess }: HabitFormProps) {
   const { createHabit } = useHabits();
+  const { t } = useLocale();
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [icon, setIcon] = useState("✅");
@@ -78,13 +73,20 @@ export function HabitForm({ onSuccess }: HabitFormProps) {
     onSuccess?.();
   }
 
+  const FREQUENCIES: { value: HabitFrequency; label: string }[] = [
+    { value: "daily", label: t.habits.daily },
+    { value: "weekdays", label: t.habits.weekdays },
+    { value: "weekly", label: t.habits.weekly },
+    { value: "specific_days", label: t.habits.specificDays },
+  ];
+
   return (
     <form onSubmit={(e) => void handleSubmit(e)} className="space-y-5 pt-1">
-      <DialogTitle className="pr-8">Nuevo hábito</DialogTitle>
+      <DialogTitle className="pr-8">{t.habits.newHabit}</DialogTitle>
 
       <div className="space-y-2">
         <label htmlFor="habit-title" className="text-sm font-medium text-foreground">
-          Título
+          {t.habits.titleLabel}
         </label>
         <input
           id="habit-title"
@@ -98,7 +100,7 @@ export function HabitForm({ onSuccess }: HabitFormProps) {
 
       <div className="space-y-2">
         <label htmlFor="habit-desc" className="text-sm font-medium text-foreground">
-          Descripción
+          {t.habits.descriptionLabel}
         </label>
         <textarea
           id="habit-desc"
@@ -113,7 +115,7 @@ export function HabitForm({ onSuccess }: HabitFormProps) {
       <div className="grid gap-4 sm:grid-cols-2">
         <div className="space-y-2">
           <label htmlFor="habit-icon" className="text-sm font-medium text-foreground">
-            Ícono
+            {t.habits.iconLabel}
           </label>
           <input
             id="habit-icon"
@@ -126,7 +128,7 @@ export function HabitForm({ onSuccess }: HabitFormProps) {
         </div>
 
         <div className="space-y-2">
-          <span className="text-sm font-medium text-foreground">Frecuencia</span>
+          <span className="text-sm font-medium text-foreground">{t.habits.frequencyLabel}</span>
           <select
             value={frequency}
             onChange={(e) => setFrequency(e.target.value as HabitFrequency)}
@@ -142,7 +144,7 @@ export function HabitForm({ onSuccess }: HabitFormProps) {
       </div>
 
       <div className="space-y-2">
-        <span className="text-sm font-medium text-foreground">Color</span>
+        <span className="text-sm font-medium text-foreground">{t.habits.colorLabel}</span>
         <div className="flex flex-wrap gap-2">
           {COLOR_PRESETS.map((c) => (
             <button
@@ -168,7 +170,7 @@ export function HabitForm({ onSuccess }: HabitFormProps) {
           className="h-4 w-4 rounded border-border text-accent focus:ring-accent/40"
         />
         <span className="text-sm text-foreground">
-          Protección de racha (vacaciones) — el hábito queda inactivo hasta que lo reactives
+          {t.habits.vacationProtection}
         </span>
       </label>
 
@@ -178,7 +180,7 @@ export function HabitForm({ onSuccess }: HabitFormProps) {
           variant="accent"
           disabled={createHabit.isPending || !title.trim()}
         >
-          {createHabit.isPending ? "Guardando…" : "Guardar"}
+          {createHabit.isPending ? t.habits.saving : t.habits.save}
         </Button>
       </div>
     </form>

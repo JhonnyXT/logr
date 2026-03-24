@@ -10,15 +10,17 @@ import { MainTaskBanner } from "@/components/tasks/MainTaskBanner";
 import { TaskList } from "@/components/tasks/TaskList";
 import { TaskForm } from "@/components/tasks/TaskForm";
 import { cn } from "@/lib/utils/cn";
+import { useLocale } from "@/contexts/locale-context";
 
 export default function TasksPage() {
   const [open, setOpen] = useState(false);
+  const { t } = useLocale();
 
   return (
     <div className="mx-auto max-w-3xl space-y-8">
       <PageHeader
-        title="Tareas"
-        description="Prioriza, completa y gana XP — tu tarea principal da extra."
+        title={t.tasks.pageTitle}
+        description={t.tasks.pageDesc}
         action={
           <div className="flex flex-wrap items-center gap-2">
             <Link
@@ -28,11 +30,11 @@ export default function TasksPage() {
               )}
             >
               <LayoutGrid className="h-4 w-4" />
-              Matriz de Eisenhower
+              {t.tasks.eisenhower}
             </Link>
             <Button type="button" variant="accent" size="md" onClick={() => setOpen(true)}>
               <Plus className="h-4 w-4" />
-              Nueva tarea
+              {t.tasks.newTask}
             </Button>
           </div>
         }

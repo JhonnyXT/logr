@@ -6,14 +6,7 @@ import { Progress } from "@/components/ui/progress";
 import { cn } from "@/lib/utils/cn";
 import type { GoalCategory, GoalWithMilestones } from "@/types/goals";
 import { MilestoneList } from "@/components/goals/MilestoneList";
-
-const CATEGORY_LABEL: Record<GoalCategory, string> = {
-  career: "Carrera",
-  health: "Salud",
-  financial: "Finanzas",
-  relationships: "Relaciones",
-  growth: "Crecimiento",
-};
+import { useLocale } from "@/contexts/locale-context";
 
 const CATEGORY_BADGE: Record<GoalCategory, string> = {
   career: "border border-info/40 bg-info/15 text-info",
@@ -21,12 +14,6 @@ const CATEGORY_BADGE: Record<GoalCategory, string> = {
   financial: "border border-warning/40 bg-warning/15 text-warning",
   relationships: "border border-pink-500/40 bg-pink-500/10 text-pink-300",
   growth: "border border-purple-500/40 bg-purple-500/10 text-purple-300",
-};
-
-const HORIZON_LABEL: Record<GoalWithMilestones["horizon"], string> = {
-  quarterly: "Trimestral",
-  "1year": "1 año",
-  "3years": "3 años",
 };
 
 function progressPercent(goal: GoalWithMilestones): number {
@@ -38,8 +25,8 @@ function progressPercent(goal: GoalWithMilestones): number {
   return Math.min(100, Math.max(0, goal.progress));
 }
 
-function formatTargetDate(iso?: string) {
-  if (!iso) return "Sin fecha objetivo";
+function formatTargetDate(iso?: string, noTargetDate?: string) {
+  if (!iso) return noTargetDate ?? "Sin fecha objetivo";
   try {
     return new Date(iso + "T12:00:00").toLocaleDateString(undefined, {
       year: "numeric",
@@ -56,7 +43,22 @@ interface GoalCardProps {
 }
 
 export function GoalCard({ goal }: GoalCardProps) {
+  const { t } = useLocale();
   const pct = progressPercent(goal);
+
+  const CATEGORY_LABEL: Record<GoalCategory, string> = {
+    career: t.goals.catCareer,
+    health: t.goals.catHealth,
+    financial: t.goals.catFinancial,
+    relationships: t.goals.catRelationships,
+    growth: t.goals.catGrowth,
+  };
+
+  const HORIZON_LABEL: Record<GoalWithMilestones["horizon"], string> = {
+    quarterly: t.goals.quarterly,
+    "1year": t.goals.oneYear,
+    "3years": t.goals.threeYears,
+  };
 
   return (
     <Card className="space-y-4">
@@ -79,12 +81,12 @@ export function GoalCard({ goal }: GoalCardProps) {
         <span className="rounded-md bg-foreground/5 px-2 py-1 font-medium text-foreground/90">
           {HORIZON_LABEL[goal.horizon]}
         </span>
-        <span>{formatTargetDate(goal.targetDate)}</span>
+        <span>{formatTargetDate(goal.targetDate, t.goals.noTargetDate)}</span>
       </div>
 
       <div className="space-y-2">
         <div className="flex justify-between text-xs text-muted">
-          <span>Progreso</span>
+          <span>{t.goals.progress}</span>
           <span className="font-medium text-foreground">{pct}%</span>
         </div>
         <Progress value={pct} />

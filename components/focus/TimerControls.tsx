@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils/cn";
 import { FOCUS_DURATIONS } from "@/types/focus";
 import type { FocusDuration } from "@/types/focus";
+import { useLocale } from "@/contexts/locale-context";
 
 interface TimerControlsProps {
   isRunning: boolean;
@@ -25,10 +26,11 @@ export function TimerControls({
   onResume,
   onStop,
 }: TimerControlsProps) {
+  const { t } = useLocale();
   if (!isRunning) {
     return (
       <div className="flex w-full max-w-xl flex-col items-center gap-3">
-        <p className="text-sm font-medium text-muted">Seleccionar duración</p>
+        <p className="text-sm font-medium text-muted">{t.focus.selectDuration}</p>
         <div className="flex flex-wrap items-center justify-center gap-2">
         {FOCUS_DURATIONS.map(({ value, label }) => (
           <Button
@@ -61,7 +63,7 @@ export function TimerControls({
           onClick={onResume}
         >
           <Play className="h-5 w-5" aria-hidden />
-          Continuar
+          {t.focus.resume}
         </Button>
       ) : (
         <Button
@@ -72,7 +74,7 @@ export function TimerControls({
           onClick={onPause}
         >
           <Pause className="h-5 w-5" aria-hidden />
-          Pausar
+          {t.focus.pause}
         </Button>
       )}
       <Button
@@ -83,7 +85,7 @@ export function TimerControls({
         onClick={onStop}
       >
         <Square className="h-4 w-4 fill-current" aria-hidden />
-        Detener
+        {t.focus.stop}
       </Button>
     </div>
   );

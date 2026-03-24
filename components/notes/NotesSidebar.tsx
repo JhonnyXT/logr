@@ -5,6 +5,7 @@ import { FileText, Plus } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { buildNoteTree } from "@/lib/notes/tree";
 import { rowToNote, type NotesRow } from "@/lib/notes/map-from-row";
+import { useLocale } from "@/contexts/locale-context";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils/cn";
 import type { Note, NoteTreeItem } from "@/types/notes";
@@ -21,11 +22,13 @@ function TreeRow({
   depth,
   selectedId,
   onSelect,
+  untitled,
 }: {
   item: NoteTreeItem;
   depth: number;
   selectedId: string | null;
   onSelect: (id: string) => void;
+  untitled: string;
 }) {
   const active = selectedId === item.id;
   return (
@@ -44,9 +47,9 @@ function TreeRow({
         <span className="shrink-0 text-base leading-none" aria-hidden>
           {item.icon || "📄"}
         </span>
-        <span className="truncate font-medium">{item.title || "Sin título"}</span>
+        <span className="truncate font-medium">{item.title || untitled}</span>
       </button>
-      {item.children.length > 0 ? (
+        {item.children.length > 0 ? (
         <div className="mt-0.5 space-y-0.5 border-l border-border/60 pl-1">
           {item.children.map((child) => (
             <TreeRow
@@ -55,6 +58,7 @@ function TreeRow({
               depth={depth + 1}
               selectedId={selectedId}
               onSelect={onSelect}
+              untitled={untitled}
             />
           ))}
         </div>
@@ -69,6 +73,7 @@ export function NotesSidebar({
   onSelectNote,
   onNotesChange,
 }: NotesSidebarProps) {
+  const { t } = useLocale();
   const tree = useMemo(() => buildNoteTree(notes), [notes]);
 
   async function handleNewPage() {
@@ -86,7 +91,7 @@ export function NotesSidebar({
       .insert({
         user_id: user.id,
         parent_id: null,
-        title: "Sin título",
+        title: t.notes.untitled,
         icon: "📄",
         content: null,
         position: maxPos,
@@ -115,7 +120,7 @@ export function NotesSidebar({
           onClick={() => void handleNewPage()}
         >
           <Plus className="h-4 w-4" />
-          Nueva página
+          {t.notes.newPage}
         </Button>
       </div>
       <div className="flex min-h-0 flex-1 flex-col gap-1 overflow-y-auto p-2">
@@ -132,6 +137,7 @@ export function NotesSidebar({
               depth={0}
               selectedId={selectedNoteId}
               onSelect={onSelectNote}
+              untitled={t.notes.untitled}
             />
           ))
         )}

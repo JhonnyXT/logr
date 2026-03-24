@@ -8,14 +8,8 @@ import { cn } from "@/lib/utils/cn";
 import { useHabits } from "@/hooks/useHabits";
 import { useXp } from "@/hooks/useXp";
 import type { HabitFrequency, HabitWithCompletions } from "@/types/habits";
+import { useLocale } from "@/contexts/locale-context";
 import { StreakCounter } from "./StreakCounter";
-
-const FREQUENCY_LABELS: Record<HabitFrequency, string> = {
-  daily: "Diario",
-  weekdays: "Días de semana",
-  weekly: "Semanal",
-  specific_days: "Días específicos",
-};
 
 interface HabitCardProps {
   habit: HabitWithCompletions;
@@ -24,7 +18,15 @@ interface HabitCardProps {
 export function HabitCard({ habit }: HabitCardProps) {
   const { toggleHabit } = useHabits();
   const { awardXp } = useXp();
+  const { t } = useLocale();
   const [busy, setBusy] = useState(false);
+
+  const FREQUENCY_LABELS: Record<HabitFrequency, string> = {
+    daily: t.habits.daily,
+    weekdays: t.habits.weekdays,
+    weekly: t.habits.weekly,
+    specific_days: t.habits.specificDays,
+  };
 
   const done = habit.isCompletedToday;
   const pending = toggleHabit.isPending && busy;
@@ -37,7 +39,7 @@ export function HabitCard({ habit }: HabitCardProps) {
         completed: habit.isCompletedToday,
       });
       if (!habit.isCompletedToday) {
-        await awardXp(10, "habit", habit.id, "¡Hábito completado!");
+        await awardXp(10, "habit", habit.id, t.habits.xpComplete);
       }
     } finally {
       setBusy(false);
@@ -88,7 +90,7 @@ export function HabitCard({ habit }: HabitCardProps) {
               disabled={pending}
               onClick={() => void handleToggle()}
               aria-label={
-                done ? "Marcar hábito como no hecho hoy" : "Completar hábito hoy"
+                done ? "Marcar hábito como no hecho hoy" : t.habits.complete
               }
             >
               {done ? (

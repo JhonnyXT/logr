@@ -11,6 +11,7 @@ import { useFocusTimer } from "@/hooks/useFocusTimer";
 import { useXp } from "@/hooks/useXp";
 import { cn } from "@/lib/utils/cn";
 import type { FocusTheme } from "@/types/focus";
+import { useLocale } from "@/contexts/locale-context";
 
 const FOCUS_STATS_KEY = ["focus-stats-today"] as const;
 
@@ -61,6 +62,7 @@ async function fetchFocusStatsToday(): Promise<{
 }
 
 export function PomodoroTimer() {
+  const { t } = useLocale();
   const queryClient = useQueryClient();
   const completionHandled = useRef(false);
   const {
@@ -184,9 +186,9 @@ export function PomodoroTimer() {
             <span className="text-xs font-medium uppercase tracking-[0.2em] text-muted">
               {isRunning
                 ? isPaused
-                  ? "Pausado"
-                  : "En enfoque"
-                : "Listo"}
+                  ? t.focus.statePaused
+                  : t.focus.stateFocusing
+                : t.focus.stateReady}
             </span>
           </div>
         </div>
@@ -199,7 +201,7 @@ export function PomodoroTimer() {
             className="min-w-[200px] shadow-[0_0_32px_-8px_rgba(0,233,106,0.55)]"
             onClick={() => startSession(duration)}
           >
-            Iniciar sesión
+            {t.focus.startSession}
           </Button>
         ) : null}
 
@@ -221,14 +223,14 @@ export function PomodoroTimer() {
           <p className="text-2xl font-semibold tabular-nums text-foreground">
             {sessionsToday}
           </p>
-          <p className="text-xs font-medium text-muted">Sesiones hoy</p>
+          <p className="text-xs font-medium text-muted">{t.focus.sessionsToday}</p>
         </div>
         <div className="rounded-xl border border-border bg-surface/80 px-4 py-3 backdrop-blur-sm">
           <p className="text-2xl font-semibold tabular-nums text-accent">
             {totalFocusMinToday}
             <span className="text-sm font-medium text-muted"> min</span>
           </p>
-          <p className="text-xs font-medium text-muted">Tiempo de enfoque hoy</p>
+          <p className="text-xs font-medium text-muted">{t.focus.focusTime}</p>
         </div>
       </div>
     </div>

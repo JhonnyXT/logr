@@ -5,8 +5,11 @@ import { ArrowLeft } from "lucide-react";
 import { PageHeader } from "@/components/shared/PageHeader";
 import { EisenhowerMatrix } from "@/components/tasks/EisenhowerMatrix";
 import { cn } from "@/lib/utils/cn";
+import { useLocale } from "@/contexts/locale-context";
 
 export default function EisenhowerPage() {
+  const { t } = useLocale();
+
   return (
     <div className="mx-auto max-w-5xl space-y-8">
       <div className="space-y-4">
@@ -17,11 +20,11 @@ export default function EisenhowerPage() {
           )}
         >
           <ArrowLeft className="h-4 w-4" />
-          Volver a Tareas
+          {t.tasks.backToTasks}
         </Link>
         <PageHeader
-          title="Matriz de Eisenhower"
-          description="Ordena el trabajo por urgencia e importancia — haz primero lo que realmente importa."
+          title={t.tasks.eisenhowerTitle}
+          description={t.tasks.eisenhowerDesc}
         />
       </div>
 
