@@ -1,26 +1,117 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #0a0f1a;
+  --background-secondary: #0d1526;
+  --foreground: #e2e8f0;
+  --muted: #4a5568;
+  --border: #1e2d40;
+  --accent: #00e96a;
+  --accent-dim: #00b853;
+  --accent-glow: rgba(0, 233, 106, 0.15);
+  --destructive: #ef4444;
+  --warning: #f59e0b;
+  --info: #3b82f6;
+
+  --grid-empty: #161b22;
+  --grid-level-1: #0e4429;
+  --grid-level-2: #006d32;
+  --grid-level-3: #26a641;
+  --grid-level-4: #39d353;
 }
 
 @theme inline {
   --color-background: var(--background);
+  --color-background-secondary: var(--background-secondary);
   --color-foreground: var(--foreground);
+  --color-muted: var(--muted);
+  --color-border: var(--border);
+  --color-accent: var(--accent);
+  --color-accent-dim: var(--accent-dim);
+  --color-accent-glow: var(--accent-glow);
+  --color-destructive: var(--destructive);
+  --color-warning: var(--warning);
+  --color-info: var(--info);
+  --color-surface: var(--background-secondary);
+  --color-grid-empty: var(--grid-empty);
+  --color-grid-1: var(--grid-level-1);
+  --color-grid-2: var(--grid-level-2);
+  --color-grid-3: var(--grid-level-3);
+  --color-grid-4: var(--grid-level-4);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+}
+
+* {
+  border-color: var(--border);
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--background);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--muted);
+}
+
+/* Marketing pricing: CSS-only monthly/yearly panels (no client JS) */
+.pricing-billing-root .pp-monthly-block,
+.pricing-billing-root .pp-yearly-block {
+  display: none;
+}
+
+.pricing-billing-root:has(#marketing-bill-monthly:checked) .pp-monthly-block {
+  display: block;
+}
+
+.pricing-billing-root:has(#marketing-bill-yearly:checked) .pp-yearly-block {
+  display: block;
+}
+
+.pricing-billing-root .pp-cta-monthly,
+.pricing-billing-root .pp-cta-yearly {
+  display: none;
+}
+
+.pricing-billing-root:has(#marketing-bill-monthly:checked) .pp-cta-monthly {
+  display: inline;
+}
+
+.pricing-billing-root:has(#marketing-bill-yearly:checked) .pp-cta-yearly {
+  display: inline;
+}
+
+.pricing-billing-root .billing-pill label[for="marketing-bill-monthly"],
+.pricing-billing-root .billing-pill label[for="marketing-bill-yearly"] {
+  color: #4a5568;
+  background: transparent;
+}
+
+.pricing-billing-root:has(#marketing-bill-monthly:checked)
+  .billing-pill
+  label[for="marketing-bill-monthly"] {
+  background: #1e2d40;
+  color: #e2e8f0;
+}
+
+.pricing-billing-root:has(#marketing-bill-yearly:checked)
+  .billing-pill
+  label[for="marketing-bill-yearly"] {
+  background: #1e2d40;
+  color: #e2e8f0;
 }

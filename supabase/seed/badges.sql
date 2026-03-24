@@ -1,0 +1,91 @@
+-- Seed: badges (75+). Run after migrations (includes 005 for task category + system XP).
+-- Usage: psql or Supabase SQL editor.
+
+insert into public.badges (slug, name, description, icon_url, category, condition) values
+  -- Habit (15+)
+  ('first_habit', 'First Step', 'Complete your first habit', '🌱', 'habit', '{"type": "habit_completions_total", "value": 1}'::jsonb),
+  ('streak_3', 'Getting Started', '3-day streak', '🔥', 'habit', '{"type": "streak_days", "value": 3}'::jsonb),
+  ('streak_5', 'Momentum', '5-day streak', '🔥', 'habit', '{"type": "streak_days", "value": 5}'::jsonb),
+  ('streak_7', 'Week Warrior', '7-day streak', '🔥', 'habit', '{"type": "streak_days", "value": 7}'::jsonb),
+  ('streak_14', 'Fortnight Fighter', '14-day streak', '⚡', 'habit', '{"type": "streak_days", "value": 14}'::jsonb),
+  ('streak_30', 'Monthly Master', '30-day streak', '🏅', 'habit', '{"type": "streak_days", "value": 30}'::jsonb),
+  ('streak_60', 'Consistency King', '60-day streak', '👑', 'habit', '{"type": "streak_days", "value": 60}'::jsonb),
+  ('streak_90', 'Quarter Champion', '90-day streak', '🏆', 'habit', '{"type": "streak_days", "value": 90}'::jsonb),
+  ('streak_180', 'Half-Year Hero', '180-day streak', '🌟', 'habit', '{"type": "streak_days", "value": 180}'::jsonb),
+  ('streak_365', 'Year Legend', '365-day streak', '💎', 'habit', '{"type": "streak_days", "value": 365}'::jsonb),
+  ('habits_10', 'Habit Builder', 'Complete 10 habits total', '🧱', 'habit', '{"type": "habit_completions_total", "value": 10}'::jsonb),
+  ('habits_50', 'Habit Machine', 'Complete 50 habits', '⚙️', 'habit', '{"type": "habit_completions_total", "value": 50}'::jsonb),
+  ('habits_100', 'Century Club', 'Complete 100 habits', '💯', 'habit', '{"type": "habit_completions_total", "value": 100}'::jsonb),
+  ('habits_500', 'Habit Master', 'Complete 500 habits', '🎯', 'habit', '{"type": "habit_completions_total", "value": 500}'::jsonb),
+  ('habits_1000', 'Legendary Tracker', 'Complete 1000 habits', '🌠', 'habit', '{"type": "habit_completions_total", "value": 1000}'::jsonb),
+  ('vacation_first', 'Guilt-Free Break', 'Use vacation skip for the first time', '🏖️', 'habit', '{"type": "vacation_skip_count", "value": 1}'::jsonb),
+
+  -- Focus (12+)
+  ('first_focus', 'First Focus', 'Complete first focus session', '🎯', 'focus', '{"type": "focus_sessions_total", "value": 1}'::jsonb),
+  ('focus_5', 'Getting in the Zone', '5 sessions', '🧘', 'focus', '{"type": "focus_sessions_total", "value": 5}'::jsonb),
+  ('focus_10', 'Focus Flow', '10 sessions', '🌊', 'focus', '{"type": "focus_sessions_total", "value": 10}'::jsonb),
+  ('focus_25', 'Deep Worker', '25 sessions', '🧠', 'focus', '{"type": "focus_sessions_total", "value": 25}'::jsonb),
+  ('focus_100', 'Focus Machine', '100 sessions', '🤖', 'focus', '{"type": "focus_sessions_total", "value": 100}'::jsonb),
+  ('focus_hours_1', 'One Hour Club', '1 hour total focus', '⏱️', 'focus', '{"type": "focus_minutes_total", "value": 60}'::jsonb),
+  ('focus_hours_10', 'Ten Hour Mark', '10 hours total', '⏱️', 'focus', '{"type": "focus_minutes_total", "value": 600}'::jsonb),
+  ('focus_hours_50', 'Focus Athlete', '50 hours total', '🏃', 'focus', '{"type": "focus_minutes_total", "value": 3000}'::jsonb),
+  ('focus_hours_100', 'Century of Focus', '100 hours total', '📚', 'focus', '{"type": "focus_minutes_total", "value": 6000}'::jsonb),
+  ('focus_hours_500', 'Focus Legend', '500 hours total', '🛤️', 'focus', '{"type": "focus_minutes_total", "value": 30000}'::jsonb),
+  ('focus_90min', 'Ultra Focus', 'Complete a 90-min session', '💪', 'focus', '{"type": "focus_session_duration_min", "value": 90}'::jsonb),
+  ('focus_marathon', 'Focus Marathon', '4 sessions in one day', '🏃‍♂️', 'focus', '{"type": "focus_sessions_single_day", "value": 4}'::jsonb),
+  ('focus_night_owl', 'Night Owl', 'Focus session after 10pm', '🦉', 'focus', '{"type": "focus_sessions_after_hour", "value": 22, "source": "local_time"}'::jsonb),
+
+  -- Task (10+)
+  ('first_task', 'Task Starter', 'Complete first task', '✅', 'task', '{"type": "tasks_completed_total", "value": 1}'::jsonb),
+  ('tasks_10', 'Getting Things Done', '10 tasks', '📋', 'task', '{"type": "tasks_completed_total", "value": 10}'::jsonb),
+  ('tasks_50', 'Productivity Pro', '50 tasks', '🚀', 'task', '{"type": "tasks_completed_total", "value": 50}'::jsonb),
+  ('tasks_100', 'Task Titan', '100 tasks', '💪', 'task', '{"type": "tasks_completed_total", "value": 100}'::jsonb),
+  ('tasks_250', 'Task Grinder', '250 tasks', '⚙️', 'task', '{"type": "tasks_completed_total", "value": 250}'::jsonb),
+  ('tasks_500', 'Task Legend', '500 tasks', '🏆', 'task', '{"type": "tasks_completed_total", "value": 500}'::jsonb),
+  ('main_task_7', 'Focused Week', 'Set main task 7 days in a row', '📌', 'task', '{"type": "main_task_streak_days", "value": 7}'::jsonb),
+  ('eisenhower_first', 'Strategic Thinker', 'Use Eisenhower matrix', '🧭', 'task', '{"type": "eisenhower_used", "value": true}'::jsonb),
+  ('all_quadrants', 'Matrix Master', 'Tasks in all 4 quadrants', '🔲', 'task', '{"type": "eisenhower_quadrants_filled", "value": 4}'::jsonb),
+  ('zero_inbox', 'Clean Slate', 'Complete all tasks in a day', '🧹', 'task', '{"type": "tasks_zero_open_day", "value": 1}'::jsonb),
+  ('overdue_clear', 'Catch Up Champion', 'Clear all overdue tasks', '🏁', 'task', '{"type": "overdue_cleared_all", "value": true}'::jsonb),
+
+  -- Level (12+)
+  ('level_5', 'Rising Up', 'Reach level 5', '📈', 'level', '{"type": "level", "value": 5}'::jsonb),
+  ('level_10', 'Double Digits', 'Reach level 10', '🔢', 'level', '{"type": "level", "value": 10}'::jsonb),
+  ('level_15', 'Halfway to 30', 'Reach level 15', '🌓', 'level', '{"type": "level", "value": 15}'::jsonb),
+  ('level_20', 'Twenty Club', 'Reach level 20', '2️⃣', 'level', '{"type": "level", "value": 20}'::jsonb),
+  ('level_25', 'Quarter Century', 'Reach level 25', '🎲', 'level', '{"type": "level", "value": 25}'::jsonb),
+  ('level_42', 'The Answer', 'Reach level 42', '🤔', 'level', '{"type": "level", "value": 42}'::jsonb),
+  ('level_50', 'Halfway There', 'Reach level 50', '⚖️', 'level', '{"type": "level", "value": 50}'::jsonb),
+  ('level_69', 'Nice.', 'Reach level 69', '😎', 'level', '{"type": "level", "value": 69}'::jsonb),
+  ('level_75', 'Three Quarters', 'Reach level 75', '🧗', 'level', '{"type": "level", "value": 75}'::jsonb),
+  ('level_90', 'Almost There', 'Reach level 90', '🌅', 'level', '{"type": "level", "value": 90}'::jsonb),
+  ('level_99', 'On the Brink', 'Reach level 99', '⚰️', 'level', '{"type": "level", "value": 99}'::jsonb),
+  ('level_100', 'Maximum Power', 'Reach level 100', '⭐', 'level', '{"type": "level", "value": 100}'::jsonb),
+  ('rank_devoted', 'Devoted', 'Reach Devoted rank', '💙', 'level', '{"type": "rank", "value": "Devoted"}'::jsonb),
+
+  -- Social (8+)
+  ('public_profile', 'Show Off', 'Make profile public', '🌐', 'social', '{"type": "profile_public", "value": true}'::jsonb),
+  ('first_reset', 'Fresh Start', 'Complete first weekly reset', '🔄', 'social', '{"type": "weekly_reset_count", "value": 1}'::jsonb),
+  ('reset_4', 'Monthly Ritual', '4 weekly resets', '🗓️', 'social', '{"type": "weekly_reset_count", "value": 4}'::jsonb),
+  ('reset_12', 'Quarterly Ritual', '12 weekly resets', '📆', 'social', '{"type": "weekly_reset_count", "value": 12}'::jsonb),
+  ('reset_52', 'Year of Resets', '52 weekly resets', '🎊', 'social', '{"type": "weekly_reset_count", "value": 52}'::jsonb),
+  ('journal_7', 'Reflective Week', '7 days journaling', '📓', 'social', '{"type": "journal_days_streak", "value": 7}'::jsonb),
+  ('journal_14', 'Reflective Fortnight', '14 days journaling', '📝', 'social', '{"type": "journal_days_streak", "value": 14}'::jsonb),
+  ('journal_30', 'Mindful Month', '30 days journaling', '📔', 'social', '{"type": "journal_days_streak", "value": 30}'::jsonb),
+  ('goal_first', 'Dream Big', 'Create first goal', '🎯', 'social', '{"type": "goals_created", "value": 1}'::jsonb),
+  ('milestone_10', 'Milestone Crusher', 'Complete 10 milestones', '🏅', 'social', '{"type": "milestones_completed", "value": 10}'::jsonb),
+
+  -- Special (10+)
+  ('early_bird', 'Early Bird', 'Complete a habit before 7am', '🐦', 'special', '{"type": "habit_completion_before_hour", "value": 7, "source": "local_time"}'::jsonb),
+  ('night_owl_habit', 'Night Owl', 'Complete a habit after 11pm', '🦉', 'special', '{"type": "habit_completion_after_hour", "value": 23, "source": "local_time"}'::jsonb),
+  ('weekend_warrior', 'Weekend Warrior', 'Active on both Sat and Sun', '🎮', 'special', '{"type": "weekend_activity_days", "value": 2}'::jsonb),
+  ('perfect_week', 'Perfect Week', 'All habits completed for 7 days', '✨', 'special', '{"type": "perfect_week_habits", "value": true}'::jsonb),
+  ('xp_1000', 'XP Collector', 'Earn 1000 XP total', '💎', 'special', '{"type": "total_xp", "value": 1000}'::jsonb),
+  ('xp_10000', 'XP Hoarder', 'Earn 10000 XP total', '💰', 'special', '{"type": "total_xp", "value": 10000}'::jsonb),
+  ('xp_50000', 'XP Veteran', 'Earn 50000 XP total', '🪙', 'special', '{"type": "total_xp", "value": 50000}'::jsonb),
+  ('xp_100000', 'XP Legend', 'Earn 100000 XP total', '👑', 'special', '{"type": "total_xp", "value": 100000}'::jsonb),
+  ('all_modules', 'Explorer', 'Use all 7 modules at least once', '🗺️', 'special', '{"type": "modules_used", "value": 7}'::jsonb),
+  ('combo_7', 'All In', 'Habit, task, focus, and journal activity on the same day', '🎪', 'special', '{"type": "daily_combo_modules", "value": 4}'::jsonb),
+  ('first_day', 'Day One', 'Complete setup', '🌅', 'special', '{"type": "onboarding_complete", "value": true}'::jsonb),
+  ('pro_member', 'Pro Player', 'Subscribe to Pro', '💳', 'special', '{"type": "subscription_tier", "value": "pro"}'::jsonb)
+on conflict (slug) do nothing;
