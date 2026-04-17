@@ -25,9 +25,14 @@ export async function updateSession(request: NextRequest) {
     }
   );
 
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  let user = null;
+  try {
+    const { data } = await supabase.auth.getUser();
+    user = data.user;
+  } catch {
+    // El fetch puede fallar en Edge Runtime si no hay sesión activa o hay un error de red.
+    // Tratamos al usuario como no autenticado y dejamos que el flujo continúe.
+  }
 
   const isAuthPage =
     request.nextUrl.pathname.startsWith("/login") ||
