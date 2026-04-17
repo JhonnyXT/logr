@@ -1,0 +1,60 @@
+---
+description: "Convenciones globales del proyecto Logr — aplica siempre"
+alwaysApply: true
+---
+
+# Convenciones del proyecto Logr
+
+## Lenguaje y tipos
+- TypeScript strict en todo el proyecto
+- Nunca usar `any`. Preferir `unknown` + narrowing o tipos concretos
+- Interfaces en `types/[modulo].ts`, nombradas en PascalCase sin prefijo `I`
+- Path alias `@/*` desde la raíz (no `./`, `../` desde components o lib)
+
+## Estilos
+- Tailwind CSS v4 con custom properties definidas en `app/globals.css`
+- Tokens de color del proyecto: `background`, `surface`, `foreground`, `muted`, `border`, `accent`, `accent-dim`, `destructive`, `warning`, `info`
+- Usar siempre `cn()` de `@/lib/utils/cn` para merge de clases (clsx + tailwind-merge)
+- Tema oscuro SIEMPRE — no hay light mode. No agregar clases `dark:` ni `light:`
+- Bordes redondeados: `rounded-lg` (inputs), `rounded-xl` (cards), `rounded-2xl` (marketing)
+
+## Componentes
+- Componentes UI base en `components/ui/` — usar estos antes de crear nuevos
+- Componentes de módulo en `components/[modulo]/` — nombrados en PascalCase
+- Componentes compartidos en `components/shared/`
+- Usar `"use client"` solo cuando sea necesario (hooks, interactividad, estado)
+- Iconos: siempre de `lucide-react`, nunca SVGs inline
+
+## Estado y datos
+- Estado servidor: TanStack Query (`useQuery`, `useMutation` con `invalidateQueries`)
+- Estado UI local: Zustand en `stores/` (sin persist, sin devtools)
+- Datos de Supabase: queries directas con `createClient()` — no hay ORM
+- Server components usan `createClient()` de `@/lib/supabase/server`
+- Client components usan `createClient()` de `@/lib/supabase/client`
+
+## i18n
+- NUNCA hardcodear strings visibles al usuario
+- Client components: `const { t } = useLocale()` de `@/contexts/locale-context`
+- Server components: `const t = await getT()` de `@/lib/i18n/server`
+- Agregar claves nuevas en `messages/es.ts` Y `messages/en.ts`
+- Tipo `Messages` se exporta desde `messages/es.ts`
+
+## Gamificación
+- XP se otorga con `useXp().awardXp(amount, source, sourceId, message)`
+- NUNCA actualizar `profiles.total_xp` directamente — el trigger `recalculate_level` lo hace
+- Feature gates: usar `FEATURE_GATES` de `@/lib/gamification/level-gates`
+- Rangos en español en BD — consultar `lib/gamification/rank-config.ts`
+
+## Supabase
+- RLS habilitado en TODAS las tablas — siempre filtrar por `user_id`
+- Admin client (`lib/supabase/admin.ts`) solo en server-side (webhooks, edge functions)
+- Nombres de columnas en snake_case en BD, camelCase en TypeScript
+
+## Exports
+- Named exports en todo el proyecto (no default exports excepto en `page.tsx` y `layout.tsx`)
+- `page.tsx` y `layout.tsx` usan `export default function`
+
+## Commits
+- Formato: `tipo: descripción breve en minúsculas`
+- Tipos: `feat`, `fix`, `docs`, `refactor`, `style`, `test`, `chore`
+- Sin emojis en mensajes de commit

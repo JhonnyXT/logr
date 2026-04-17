@@ -1,0 +1,28 @@
+---
+description: "Reglas de TypeScript estricto para el proyecto Logr"
+globs: "**/*.ts,**/*.tsx"
+---
+
+# TypeScript estricto — Logr
+
+## Configuración
+- `strict: true` en tsconfig.json
+- `noEmit: true` — Next.js maneja la compilación
+- Alias `@/*` para imports desde la raíz
+
+## Reglas
+- NUNCA usar `any` — preferir `unknown` con type guards o tipos concretos
+- NUNCA usar `as` para casteos excepto en mapeo de rows de Supabase (patrón `row as Record<string, unknown>`)
+- Interfaces para formas de datos (types/). Type aliases para uniones y tipos utilitarios
+- Siempre tipar props de componentes con `interface ComponentNameProps`
+- `Record<string, unknown>` en lugar de `object` para objetos genéricos
+- Usar `satisfies` para validación de tipo sin ampliar
+
+## Convenciones de nombres
+- Archivos: `kebab-case.ts` (ej: `xp-engine.ts`, `habit-card.tsx`)
+- Componentes: `PascalCase` (ej: `HabitCard`, `XpBar`)
+- Hooks: `camelCase` con prefijo `use` (ej: `useHabits`, `useXp`)
+- Stores: `kebab-case-store.ts` con `use[Name]Store`
+- Types: `PascalCase` (ej: `HabitFrequency`, `TaskPriority`)
+- Constantes de config: `UPPER_SNAKE_CASE` (ej: `XP_REWARDS`, `FEATURE_GATES`)
+- Columnas BD: `snake_case` en SQL, `camelCase` en TS (mapeo manual en hooks)

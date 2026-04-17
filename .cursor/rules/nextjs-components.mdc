@@ -1,0 +1,79 @@
+---
+description: "Patrones de componentes React y páginas Next.js del proyecto Logr"
+globs: "**/*.tsx"
+---
+
+# Patrones de componentes — Logr
+
+## Componente UI base (components/ui/)
+
+Patrón: `forwardRef` + variantes como `Record` + `cn()`.
+
+Referencia: `@/components/ui/button.tsx`
+
+```tsx
+"use client";
+import { forwardRef, type ButtonHTMLAttributes } from "react";
+import { cn } from "@/lib/utils/cn";
+
+type Variant = "default" | "ghost" | "outline" | "accent" | "destructive";
+const variantStyles: Record<Variant, string> = { ... };
+
+const Button = forwardRef<HTMLButtonElement, ButtonProps>(
+  ({ className, variant = "default", size = "md", ...props }, ref) => (
+    <button ref={ref} className={cn(base, variantStyles[variant], className)} {...props} />
+  )
+);
+```
+
+## Componente de módulo (components/[modulo]/)
+
+Patrón: `"use client"` + `useLocale()` + hook de datos + `useXp()` para XP.
+
+Referencia: `@/components/habits/HabitCard.tsx`
+
+- Importar `useLocale` de `@/contexts/locale-context`
+- Mover labels/mapas que dependan de `t` DENTRO del cuerpo del componente
+- Usar `t.modulo.key` para todo texto visible
+- Llamar `awardXp(amount, source, id, t.modulo.xpMessage)` al completar acciones
+
+## Página de dashboard
+
+Referencia: `@/app/(dashboard)/habits/page.tsx`
+
+```tsx
+"use client";
+import { PageHeader } from "@/components/shared/PageHeader";
+import { useLocale } from "@/contexts/locale-context";
+
+export default function ModuloPage() {
+  const { t } = useLocale();
+  return (
+    <div className="mx-auto max-w-3xl space-y-8">
+      <PageHeader title={t.modulo.pageTitle} description={t.modulo.pageDesc} />
+    </div>
+  );
+}
+```
+
+- Container: `mx-auto max-w-3xl space-y-8`
+- Siempre usar `PageHeader` con `title` y `description`
+- Botón de acción se pasa como prop `action` de `PageHeader`
+
+## Formularios
+
+Referencia: `@/components/tasks/TaskForm.tsx`
+
+- Inputs: `w-full rounded-lg border border-border bg-background px-3 py-2 text-sm text-foreground placeholder:text-muted focus:outline-none focus:ring-2 focus:ring-accent/40`
+- Labels: `text-sm font-medium text-foreground`
+- Botón submit: `<Button variant="accent">` con estado loading
+- Checkboxes: `h-4 w-4 rounded border-border text-accent focus:ring-accent/40`
+- Select: mismas clases que input
+
+## Server components
+
+Referencia: `@/app/(dashboard)/layout.tsx`
+
+- Usar `createClient()` de `@/lib/supabase/server`
+- Para i18n: `const t = await getT()` de `@/lib/i18n/server`
+- Redirect: `redirect("/login")` de `next/navigation`

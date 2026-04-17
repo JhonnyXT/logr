@@ -1,0 +1,89 @@
+---
+description: "Patrones de Supabase, API y lógica server-side en Logr"
+globs: "lib/**/*.ts,app/api/**/*.ts,hooks/**/*.ts,supabase/**/*"
+---
+
+# Patrones Supabase y server-side — Logr
+
+## Clientes de Supabase
+
+Hay 3 clientes — usar el correcto según el contexto:
+
+| Contexto | Import | Archivo |
+|---|---|---|
+| Client component | `createClient()` | `@/lib/supabase/client` |
+| Server component / Server Action | `createClient()` | `@/lib/supabase/server` |
+| Webhook / admin (service role) | `createAdminClient()` | `@/lib/supabase/admin` |
+
+NUNCA usar el admin client desde componentes del lado del cliente.
+
+## Hooks de datos (TanStack Query)
+
+Referencia: `@/hooks/useHabits.ts`
+
+```typescript
+export function useModulo() {
+  const supabase = createClient();
+  const queryClient = useQueryClient();
+
+  const query = useQuery({
+    queryKey: ["modulo"],
+    queryFn: async () => {
+      const { data, error } = await supabase.from("tabla").select("*");
+      if (error) throw error;
+      return data.map(mapRow);
+    },
+  });
+
+  const create = useMutation({
+    mutationFn: async (input: CreateInput) => {
+      const user = (await supabase.auth.getUser()).data.user;
+      if (!user) throw new Error("Not authenticated");
+      const { error } = await supabase.from("tabla").insert({ user_id: user.id, ...input });
+      if (error) throw error;
+    },
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["modulo"] }),
+  });
+
+  return { items: query.data ?? [], isLoading: query.isLoading, create };
+}
+```
+
+- Siempre mapear rows de snake_case a camelCase con función `mapRow`
+- QueryKey como array de strings descriptivos
+- Invalidar queries tras mutaciones
+
+## Otorgar XP
+
+SIEMPRE usar el hook `useXp` — NUNCA actualizar `profiles.total_xp` directamente.
+
+```typescript
+const { awardXp } = useXp();
+await awardXp(10, "habit", habitId, t.habits.xpComplete);
+```
+
+El trigger `recalculate_level` en PostgreSQL se encarga de:
+1. Sumar `amount` a `total_xp`
+2. Recalcular `current_level` con la fórmula `floor(power(xp/100, 1/1.8))`
+3. Asignar `current_rank` según el nuevo nivel
+
+## Migraciones SQL
+
+Archivos en `supabase/migrations/` numerados secuencialmente:
+- `001_schema_core.sql` — profiles, xp_transactions, activity_logs
+- `002_schema_modules.sql` — habits, tasks, focus, journal, goals, vision, notes, badges
+- `003_rls_policies.sql` — Row Level Security
+- `004_functions_triggers.sql` — recalculate_level, upsert_activity_log
+- `005_badges_task_and_xp_system.sql` — extensiones al schema
+- `006_spanish_ranks.sql` — rangos en español
+- `007_add_locale.sql` — columna locale en profiles
+
+Al agregar tablas nuevas: crear `008_nombre.sql` con el schema + RLS policies.
+
+## Webhook de Stripe
+
+Referencia: `@/app/api/webhooks/stripe/route.ts`
+
+Flujo: verificar firma → switch por event.type → actualizar profile con admin client.
+Runtime: `nodejs` (no Edge).
+Eventos manejados: `checkout.session.completed`, `customer.subscription.updated`, `customer.subscription.deleted`.

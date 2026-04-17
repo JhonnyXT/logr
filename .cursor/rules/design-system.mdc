@@ -1,0 +1,53 @@
+---
+description: "Sistema de diseño y tokens visuales de Logr"
+globs: "**/components/ui/**,**/globals.css"
+---
+
+# Sistema de diseño — Logr
+
+## Tokens de color (globals.css)
+
+```css
+--background: #0a0f1a;        /* Fondo principal (navy oscuro) */
+--background-secondary: #0d1526; /* Surface/cards */
+--foreground: #e2e8f0;         /* Texto principal */
+--muted: #4a5568;              /* Texto secundario */
+--border: #1e2d40;             /* Bordes */
+--accent: #00e96a;             /* Verde primario */
+--accent-dim: #00b853;         /* Verde hover */
+--destructive: #ef4444;        /* Rojo error */
+--warning: #f59e0b;            /* Ámbar advertencia */
+--info: #3b82f6;               /* Azul información */
+```
+
+Grid de actividad:
+```css
+--grid-empty: #161b22;
+--grid-level-1: #0e4429;
+--grid-level-2: #006d32;
+--grid-level-3: #26a641;
+--grid-level-4: #39d353;
+```
+
+## Uso en Tailwind
+
+Las custom properties se mapean en `@theme inline` — usar directamente:
+`bg-background`, `text-foreground`, `text-muted`, `border-border`, `bg-accent`, `bg-surface`, etc.
+
+## Componentes base disponibles
+
+| Componente | Import | Variantes |
+|---|---|---|
+| `Button` | `@/components/ui/button` | default, ghost, outline, accent, destructive × sm, md, lg, icon |
+| `Card` | `@/components/ui/card` | Card, CardHeader, CardTitle, CardContent |
+| `Badge` | `@/components/ui/badge` | default, outline, accent, destructive, warning |
+| `Dialog` | `@/components/ui/dialog` | Overlay modal con backdrop blur |
+| `Progress` | `@/components/ui/progress` | Barra de progreso con indicatorClassName |
+
+SIEMPRE usar estos componentes antes de crear nuevos. No instalar librerías UI externas.
+
+## Espaciado de páginas
+- Container de página: `mx-auto max-w-3xl space-y-8`
+- Separación de secciones: `space-y-8` o `space-y-10`
+- Cards: `rounded-xl border border-border bg-surface p-6`
+- Inputs: `rounded-lg border border-border bg-background px-3 py-2.5 text-sm`
